@@ -156,34 +156,52 @@ router.post('/new', function (req, res, next) {
             });
         });
 });
-//
-// /* DELETE quotation*/
-// router.delete('/remove/:id', function (req, res, next) {
-//     const client = new Client();
-//     client.connect()
-//         .then(() => {
-//             const sql = "DELETE FROM clients WHERE client_id = $1";
-//             const params = [req.params.id];
-//
-//             return client.query(sql, params);
-//         })
-//         .then(result => {
-//             res.status(200).json({
-//                 status: 1,
-//                 message: 'Client deleted successfully'
-//             });
-//         })
-//         .catch(e => {
-//             res.status(400).json({
-//                 status: 0,
-//                 message: 'Something went wrong',
-//                 content: {
-//                     error: e
-//                 }
-//             });
-//         })
-// });
-//
+
+/* DELETE quotation*/
+router.delete('/remove/:id', function (req, res, next) {
+    const client = new Client();
+    client.connect()
+        .then(() => {
+            const sql = "DELETE FROM financials WHERE quotation_id = $1";
+            const params = [req.params.id];
+
+            return client.query(sql, params);
+        })
+        .then(() => {
+            const sql = "DELETE FROM release_plans WHERE quotation_id = $1";
+            const params = [req.params.id];
+
+            return client.query(sql, params);
+        })
+        .then(() => {
+            const sql = "DELETE FROM payment_plans WHERE quotation_id = $1";
+            const params = [req.params.id];
+
+            return client.query(sql, params);
+        })
+        .then(() => {
+            const sql = "DELETE FROM quotations WHERE quotation_id = $1";
+            const params = [req.params.id];
+
+            return client.query(sql, params);
+        })
+        .then(result => {
+            res.status(200).json({
+                status: 1,
+                message: 'Quotation deleted successfully'
+            });
+        })
+        .catch(e => {
+            res.status(400).json({
+                status: 0,
+                message: 'Something went wrong',
+                content: {
+                    error: e
+                }
+            });
+        })
+});
+
 // /* UPDATE quotation*/
 // router.post('/update/:id', function (req, res, next) {
 //
