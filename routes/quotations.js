@@ -4,77 +4,81 @@ const dateFormat = require('dateformat');
 
 const {Client} = require('pg');
 
-// /* GET quotation*/
-// router.get('/:id', (req, res, next) => {
-//     const client = new Client();
-//     client.connect()
-//         .then(() => {
-//             const sql = "SELECT * FROM clients WHERE client_id = $1";
-//             const params = [req.params.id];
-//
-//             return client.query(sql, params);
-//         })
-//         .then(result => {
-//             if (result.rows.length === 0) {
-//                 res.status(200).json({
-//                     status: 1,
-//                     message: 'No client found'
-//                 });
-//             } else {
-//                 res.status(200).json({
-//                     status: 1,
-//                     message: 'Available details',
-//                     content: {
-//                         clients: result.rows[0]
-//                     }
-//                 });
-//             }
-//         })
-//         .catch(e => {
-//             res.status(400).json({
-//                 status: 0,
-//                 message: 'Something went wrong',
-//                 content: {
-//                     error: e
-//                 }
-//             });
-//         })
-// });
-//
-// /* GET quotations*/
-// router.get('/', function (req, res, next) {
-//     const client = new Client();
-//     client.connect()
-//         .then(() => {
-//             const sql = "SELECT * FROM clients";
-//             return client.query(sql);
-//         })
-//         .then(result => {
-//             if (result.rows.length === 0) {
-//                 res.status(200).json({
-//                     status: 1,
-//                     message: 'No client found'
-//                 });
-//             } else {
-//                 res.status(200).json({
-//                     status: 1,
-//                     message: 'Available clients',
-//                     content: {
-//                         clients: result.rows
-//                     }
-//                 });
-//             }
-//         })
-//         .catch(e => {
-//             res.status(400).json({
-//                 status: 0,
-//                 message: 'Something went wrong',
-//                 content: {
-//                     error: e
-//                 }
-//             });
-//         })
-// });
+/* GET quotation*/
+router.get('/:id', (req, res, next) => {
+    const client = new Client();
+    client.connect()
+        .then(() => {
+            const sql = "SELECT quotations.quotation_id, quotations.title, quotations.description, quotations.amount, quotations.terms, quotations.created_at, quotations.updated_at, clients.code " +
+                "FROM quotations INNER JOIN clients ON quotations.client_id=clients.client_id " +
+                "WHERE quotations.quotation_id = $1";
+            const params = [req.params.id];
+
+            return client.query(sql, params);
+        })
+        .then(result => {
+            if (result.rows.length === 0) {
+                res.status(200).json({
+                    status: 1,
+                    message: 'No client found'
+                });
+            } else {
+                res.status(200).json({
+                    status: 1,
+                    message: 'Available details',
+                    content: {
+                        quotations: result.rows[0]
+                    }
+                });
+            }
+        })
+        .catch(e => {
+            res.status(400).json({
+                status: 0,
+                message: 'Something went wrong',
+                content: {
+                    error: e
+                }
+            });
+        })
+});
+
+/* GET quotations*/
+router.get('/', function (req, res, next) {
+    const client = new Client();
+    client.connect()
+        .then(() => {
+            const sql = "SELECT quotations.quotation_id, quotations.title, quotations.description, quotations.amount, " +
+                "quotations.terms, quotations.created_at, quotations.updated_at, clients.code" +
+                " FROM quotations INNER JOIN clients ON quotations.client_id=clients.client_id";
+            return client.query(sql);
+        })
+        .then(result => {
+            if (result.rows.length === 0) {
+                res.status(200).json({
+                    status: 1,
+                    message: 'No quotations found'
+                });
+            } else {
+                res.status(200).json({
+                    status: 1,
+                    message: 'Available quotations',
+                    content: {
+                        quotations: result.rows
+                    }
+                });
+            }
+        })
+        .catch(e => {
+            res.status(400).json({
+                status: 0,
+                message: 'Something went wrong',
+                content: {
+                    error: e
+                }
+            });
+        })
+});
 
 /* POST quotation*/
 router.post('/new', function (req, res, next) {
