@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const dateFormat = require('dateformat');
 
 const {Client} = require('pg');
 
@@ -79,6 +80,8 @@ const {Client} = require('pg');
 router.post('/new', function (req, res, next) {
 
     const client = new Client();
+    let now = new Date();
+
     client.connect()
         .then(() => {
             console.log('PG connect with quotation');
@@ -86,8 +89,8 @@ router.post('/new', function (req, res, next) {
 
             const sql = "INSERT INTO quotations (created_at, updated_at, title, description, amount, terms, client_id) VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING quotation_id";
             const params = [
-                "2019-07-28T21:19:01Z",
-                "2019-07-28T21:19:01Z",
+                dateFormat(now, "isoDateTime"),
+                dateFormat(now, "isoDateTime"),
                 req.body.title,
                 req.body.description,
                 req.body.amount,
@@ -203,44 +206,98 @@ router.delete('/remove/:id', function (req, res, next) {
 });
 
 // /* UPDATE quotation*/
-// router.post('/update/:id', function (req, res, next) {
-//
-//     const client = new Client();
-//     client.connect()
-//         .then(() => {
-//             console.log('PG connect with client');
-//             console.log(req.body);
-//
-//             const sql = "UPDATE clients SET name = $1, code = $2, email = $3, contact_number = $4, address_line_first = $5, address_line_last = $6, country = $7, description = $8 WHERE client_id = $9";
-//             const params = [
-//                 req.body.name,
-//                 req.body.code,
-//                 req.body.email,
-//                 req.body.contact_number,
-//                 req.body.address_line_first,
-//                 req.body.address_line_last,
-//                 req.body.country,
-//                 req.body.description,
-//                 req.params.id
-//             ];
-//
-//             return client.query(sql, params);
-//         })
-//         .then(result => {
-//             res.status(200).json({
-//                 status: 1,
-//                 message: 'Updated successfully'
-//             })
-//         })
-//         .catch(e => {
-//             res.status(400).json({
-//                 status: 0,
-//                 message: 'Something went wrong',
-//                 content: {
-//                     error: e
-//                 }
-//             });
-//         });
-// });
+router.post('/update/:id', function (req, res, next) {
+
+    const client = new Client();
+    let now = new Date();
+
+    client.connect()
+        .then(() => {
+            console.log('PG connect with quotation');
+            console.log(req.body);
+
+            const sql = "UPDATE quotations SET updated_at = $1, title = $2, description = $3, amount = $4, terms = $5 WHERE quotation_id = $6";
+            const params = [
+                dateFormat(now, "isoDateTime"),
+                req.body.title,
+                req.body.description,
+                req.body.amount,
+                req.body.terms,
+                req.params.id
+            ];
+
+            return client.query(sql, params);
+        })
+        .then(result => {
+            const sql = "DELETE FROM financials WHERE quotation_id = $1";
+            return client.query(sql, [req.params.id]);
+        })
+        .then(result => {
+            console.log('PG connect with finance');
+
+            const sql = "INSERT INTO financials (description, amount, quotation_id) VALUES ($1,$2,$3)";
+            const quot_id = req.params.id;
+
+            let fin = req.body.financials;
+            let i;
+            for (i = 0; i < fin.length; i++) {
+                const params = [fin[i].description, fin[i].amount, quot_id];
+                client.query(sql, params);
+            }
+
+            return quot_id;
+        })
+        .then(result => {
+            const sql = "DELETE FROM release_plans WHERE quotation_id = $1";
+            return client.query(sql, [req.params.id]);
+        })
+        .then(result => {
+            console.log('PG connect with releases');
+
+            const sql = "INSERT INTO release_plans (description, release_date, quotation_id) VALUES ($1,$2,$3)";
+
+            let rel = req.body.releases;
+            let i;
+            for (i = 0; i < rel.length; i++) {
+                const params = [rel[i].description, rel[i].release_date, req.params.id];
+                client.query(sql, params);
+            }
+
+            return result;
+        })
+        .then(result => {
+            const sql = "DELETE FROM payment_plans WHERE quotation_id = $1";
+            return client.query(sql, [req.params.id]);
+        })
+        .then(result => {
+            console.log('PG connect with payment');
+
+            const sql = "INSERT INTO payment_plans (description, amount, invoice_date, quotation_id) VALUES ($1,$2,$3, $4)";
+
+            let pay = req.body.payments;
+            let i;
+            for (i = 0; i < pay.length; i++) {
+                const params = [pay[i].description, pay[i].amount, pay[i].invoice_date,req.params.id];
+                client.query(sql, params);
+            }
+
+            return result;
+        })
+        .then(result => {
+            res.status(200).json({
+                status: 1,
+                message: 'Quotations updated successfully'
+            })
+        })
+        .catch(e => {
+            res.status(400).json({
+                status: 0,
+                message: 'Something went wrong',
+                content: {
+                    error: e
+                }
+            });
+        });
+});
 
 module.exports = router;
