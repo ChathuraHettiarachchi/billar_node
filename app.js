@@ -5,19 +5,23 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
+const cors = require('cors');
 
 const clientsRouter = require('./routes/clients');
 const statusRouter = require('./routes/project_status');
 const quotationRouter = require('./routes/quotations');
 // const paymentRouter = require('./routes/payment_plans');
-// const financeRouter = require('./routes/financials');
+const financeRouter = require('./routes/financials');
 // const releaseRouter = require('./routes/release_plans');
 
 const app = express();
 
+app.use(cors());
 app.listen(4000, () => {
     console.log("BillarNode is listening on port 4000")
 });
+
+app.disable('etag');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -33,7 +37,7 @@ app.use('/clients', clientsRouter);
 app.use('/status', statusRouter);
 app.use('/quotations', quotationRouter);
 // app.use('/payments', paymentRouter);
-// app.use('/finances', financeRouter);
+app.use('/financials', financeRouter);
 // app.use('/releases', releaseRouter);
 
 // catch 404 and forward to error handler

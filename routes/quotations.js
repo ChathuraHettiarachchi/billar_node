@@ -9,7 +9,7 @@ router.get('/:id', (req, res, next) => {
     const client = new Client();
     client.connect()
         .then(() => {
-            const sql = "SELECT quotations.quotation_id, quotations.title, quotations.description, quotations.amount, quotations.terms, quotations.created_at, quotations.updated_at, clients.code " +
+            const sql = "SELECT quotations.quotation_id, quotations.title, quotations.description, quotations.amount, quotations.terms, quotations.created_at, quotations.updated_at, quotations.status,clients.code " +
                 "FROM quotations INNER JOIN clients ON quotations.client_id=clients.client_id " +
                 "WHERE quotations.quotation_id = $1";
             const params = [req.params.id];
@@ -49,7 +49,7 @@ router.get('/', function (req, res, next) {
     client.connect()
         .then(() => {
             const sql = "SELECT quotations.quotation_id, quotations.title, quotations.description, quotations.amount, " +
-                "quotations.terms, quotations.created_at, quotations.updated_at, clients.code" +
+                "quotations.terms, quotations.created_at, quotations.updated_at, quotations.status, clients.code" +
                 " FROM quotations INNER JOIN clients ON quotations.client_id=clients.client_id";
             return client.query(sql);
         })
@@ -91,7 +91,7 @@ router.post('/new', function (req, res, next) {
             console.log('PG connect with quotation');
             console.log(req.body);
 
-            const sql = "INSERT INTO quotations (created_at, updated_at, title, description, amount, terms, client_id) VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING quotation_id";
+            const sql = "INSERT INTO quotations (created_at, updated_at, title, description, amount, terms, client_id, status) VALUES ($1,$2,$3,$4,$5,$6,$7,$8) RETURNING quotation_id";
             const params = [
                 dateFormat(now, "isoDateTime"),
                 dateFormat(now, "isoDateTime"),
@@ -99,7 +99,8 @@ router.post('/new', function (req, res, next) {
                 req.body.description,
                 req.body.amount,
                 req.body.terms,
-                req.body.client_id
+                req.body.client_id,
+                req.body.status
             ];
 
             return client.query(sql, params);
@@ -220,13 +221,14 @@ router.post('/update/:id', function (req, res, next) {
             console.log('PG connect with quotation');
             console.log(req.body);
 
-            const sql = "UPDATE quotations SET updated_at = $1, title = $2, description = $3, amount = $4, terms = $5 WHERE quotation_id = $6";
+            const sql = "UPDATE quotations SET updated_at = $1, title = $2, description = $3, amount = $4, terms = $5, status= $6 WHERE quotation_id = $7";
             const params = [
                 dateFormat(now, "isoDateTime"),
                 req.body.title,
                 req.body.description,
                 req.body.amount,
                 req.body.terms,
+                req.body.status,
                 req.params.id
             ];
 
