@@ -85,8 +85,8 @@ router.post('/new', function (req, res, next) {
 
             const sql = "INSERT INTO project_statuses (title, color) VALUES ($1,$2)";
             const params = [
-                req.body.title,
-                req.body.color
+                req.body.status.title,
+                req.body.status.color
             ];
 
             return pStatus.query(sql, params);
@@ -146,8 +146,8 @@ router.post('/update/:id', function (req, res, next) {
 
             const sql = "UPDATE project_statuses SET title = $1, color = $2 WHERE status_id = $3";
             const params = [
-                req.body.title,
-                req.body.color,
+                req.body.status.title,
+                req.body.status.color,
                 req.params.id
             ];
 
