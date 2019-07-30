@@ -9,7 +9,7 @@ router.get('/:id', (req, res, next) => {
     const client = new Client();
     client.connect()
         .then(() => {
-            const sql = "SELECT quotations.quotation_id, quotations.title, quotations.description, quotations.amount, quotations.terms, quotations.created_at, quotations.updated_at, quotations.status,clients.code " +
+            const sql = "SELECT quotations.quotation_id, quotations.title, quotations.description, quotations.amount, quotations.terms, quotations.created_at, quotations.updated_at, quotations.status,clients.code, clients.client_id, clients.email, clients.address_line_first, clients.address_line_last, clients.contact_number, clients.name " +
                 "FROM quotations INNER JOIN clients ON quotations.client_id=clients.client_id " +
                 "WHERE quotations.quotation_id = $1";
             const params = [req.params.id];
@@ -49,7 +49,7 @@ router.get('/', function (req, res, next) {
     client.connect()
         .then(() => {
             const sql = "SELECT quotations.quotation_id, quotations.title, quotations.description, quotations.amount, " +
-                "quotations.terms, quotations.created_at, quotations.updated_at, quotations.status, clients.code" +
+                "quotations.terms, quotations.created_at, quotations.updated_at, quotations.status, clients.code, clients.client_id" +
                 " FROM quotations INNER JOIN clients ON quotations.client_id=clients.client_id";
             return client.query(sql);
         })
@@ -95,12 +95,12 @@ router.post('/new', function (req, res, next) {
             const params = [
                 dateFormat(now, "isoDateTime"),
                 dateFormat(now, "isoDateTime"),
-                req.body.title,
-                req.body.description,
-                req.body.amount,
-                req.body.terms,
-                req.body.client_id,
-                req.body.status
+                req.body.quotation.title,
+                req.body.quotation.description,
+                req.body.quotation.amount,
+                req.body.quotation.terms,
+                req.body.quotation.client_id,
+                req.body.quotation.status
             ];
 
             return client.query(sql, params);
@@ -111,7 +111,7 @@ router.post('/new', function (req, res, next) {
             const sql = "INSERT INTO financials (description, amount, quotation_id) VALUES ($1,$2,$3)";
             const quot_id = result.rows[0].quotation_id;
 
-            let fin = req.body.financials;
+            let fin = req.body.quotation.financials;
             let i;
             for (i = 0; i < fin.length; i++) {
                 const params = [fin[i].description, fin[i].amount, quot_id];
@@ -125,7 +125,7 @@ router.post('/new', function (req, res, next) {
 
             const sql = "INSERT INTO release_plans (description, release_date, quotation_id) VALUES ($1,$2,$3)";
 
-            let rel = req.body.releases;
+            let rel = req.body.quotation.releases;
             let i;
             for (i = 0; i < rel.length; i++) {
                 const params = [rel[i].description, rel[i].release_date, result];
@@ -139,10 +139,10 @@ router.post('/new', function (req, res, next) {
 
             const sql = "INSERT INTO payment_plans (description, amount, invoice_date, quotation_id) VALUES ($1,$2,$3, $4)";
 
-            let pay = req.body.payments;
+            let pay = req.body.quotation.payments;
             let i;
             for (i = 0; i < pay.length; i++) {
-                const params = [pay[i].description, pay[i].amount, pay[i].invoice_date,result];
+                const params = [pay[i].description, pay[i].amount, pay[i].invoice_date, result];
                 client.query(sql, params);
             }
 
@@ -224,11 +224,11 @@ router.post('/update/:id', function (req, res, next) {
             const sql = "UPDATE quotations SET updated_at = $1, title = $2, description = $3, amount = $4, terms = $5, status= $6 WHERE quotation_id = $7";
             const params = [
                 dateFormat(now, "isoDateTime"),
-                req.body.title,
-                req.body.description,
-                req.body.amount,
-                req.body.terms,
-                req.body.status,
+                req.body.quotation.title,
+                req.body.quotation.description,
+                req.body.quotation.amount,
+                req.body.quotation.terms,
+                req.body.quotation.status,
                 req.params.id
             ];
 
@@ -244,7 +244,7 @@ router.post('/update/:id', function (req, res, next) {
             const sql = "INSERT INTO financials (description, amount, quotation_id) VALUES ($1,$2,$3)";
             const quot_id = req.params.id;
 
-            let fin = req.body.financials;
+            let fin = req.body.quotation.financials;
             let i;
             for (i = 0; i < fin.length; i++) {
                 const params = [fin[i].description, fin[i].amount, quot_id];
@@ -262,7 +262,7 @@ router.post('/update/:id', function (req, res, next) {
 
             const sql = "INSERT INTO release_plans (description, release_date, quotation_id) VALUES ($1,$2,$3)";
 
-            let rel = req.body.releases;
+            let rel = req.body.quotation.releases;
             let i;
             for (i = 0; i < rel.length; i++) {
                 const params = [rel[i].description, rel[i].release_date, req.params.id];
@@ -280,10 +280,10 @@ router.post('/update/:id', function (req, res, next) {
 
             const sql = "INSERT INTO payment_plans (description, amount, invoice_date, quotation_id) VALUES ($1,$2,$3, $4)";
 
-            let pay = req.body.payments;
+            let pay = req.body.quotation.payments;
             let i;
             for (i = 0; i < pay.length; i++) {
-                const params = [pay[i].description, pay[i].amount, pay[i].invoice_date,req.params.id];
+                const params = [pay[i].description, pay[i].amount, pay[i].invoice_date, req.params.id];
                 client.query(sql, params);
             }
 
