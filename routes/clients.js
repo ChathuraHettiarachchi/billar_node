@@ -44,7 +44,7 @@ router.get('/', function (req, res, next) {
     const client = new Client();
     client.connect()
         .then(() => {
-            const sql = "SELECT * FROM clients";
+            const sql = "SELECT * FROM clients ORDER BY client_id";
             return client.query(sql);
         })
         .then(result => {
@@ -85,14 +85,14 @@ router.post('/new', function (req, res, next) {
 
             const sql = "INSERT INTO clients (name, code, email, contact_number, address_line_first, address_line_last, country, description) VALUES ($1,$2,$3,$4,$5,$6,$7,$8)";
             const params = [
-                req.body.name,
-                req.body.code,
-                req.body.email,
-                req.body.contact_number,
-                req.body.address_line_first,
-                req.body.address_line_last,
-                req.body.country,
-                req.body.description
+                req.body.client.name,
+                req.body.client.code,
+                req.body.client.email,
+                req.body.client.contact_number,
+                req.body.client.address_line_first,
+                req.body.client.address_line_last,
+                req.body.client.country,
+                req.body.client.description
             ];
 
             return client.query(sql, params);
@@ -152,14 +152,14 @@ router.post('/update/:id', function (req, res, next) {
 
             const sql = "UPDATE clients SET name = $1, code = $2, email = $3, contact_number = $4, address_line_first = $5, address_line_last = $6, country = $7, description = $8 WHERE client_id = $9";
             const params = [
-                req.body.name,
-                req.body.code,
-                req.body.email,
-                req.body.contact_number,
-                req.body.address_line_first,
-                req.body.address_line_last,
-                req.body.country,
-                req.body.description,
+                req.body.client.name,
+                req.body.client.code,
+                req.body.client.email,
+                req.body.client.contact_number,
+                req.body.client.address_line_first,
+                req.body.client.address_line_last,
+                req.body.client.country,
+                req.body.client.description,
                 req.params.id
             ];
 
