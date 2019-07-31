@@ -216,6 +216,8 @@ router.post('/update/:id', function (req, res, next) {
     const client = new Client();
     let now = new Date();
 
+    console.log(req.body);
+
     client.connect()
         .then(() => {
             console.log('PG connect with quotation');
