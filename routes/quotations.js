@@ -308,4 +308,41 @@ router.post('/update/:id', function (req, res, next) {
         });
 });
 
+/* UPDATE status*/
+router.post('/update/:id/status', (req, res, next) => {
+
+    let now = new Date();
+    const client = new Client();
+    client.connect()
+        .then(() => {
+            console.log('PG connect with quotation');
+            console.log(req.body);
+            console.log(req.body.quotation.status);
+
+            const sql = "UPDATE quotations SET updated_at = $1, status = $2 WHERE quotation_id = $3";
+            const params = [
+                dateFormat(now, "isoDateTime"),
+                req.body.quotation.status,
+                req.params.id
+            ];
+
+            return client.query(sql, params);
+        })
+        .then(result => {
+            res.status(200).json({
+                status: 1,
+                message: 'Quotation updated'
+            });
+        })
+        .catch(e => {
+            res.status(400).json({
+                status: 0,
+                message: 'Something went wrong',
+                content: {
+                    error: e
+                }
+            });
+        })
+});
+
 module.exports = router;
