@@ -10,9 +10,9 @@ const cors = require('cors');
 const clientsRouter = require('./routes/clients');
 const statusRouter = require('./routes/project_status');
 const quotationRouter = require('./routes/quotations');
-// const paymentRouter = require('./routes/payment_plans');
+const paymentRouter = require('./routes/payments');
 const financeRouter = require('./routes/financials');
-// const releaseRouter = require('./routes/release_plans');
+const releaseRouter = require('./routes/releases');
 
 const app = express();
 
@@ -36,9 +36,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/clients', clientsRouter);
 app.use('/status', statusRouter);
 app.use('/quotations', quotationRouter);
-// app.use('/payments', paymentRouter);
+app.use('/payments', paymentRouter);
 app.use('/financials', financeRouter);
-// app.use('/releases', releaseRouter);
+app.use('/releases', releaseRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
