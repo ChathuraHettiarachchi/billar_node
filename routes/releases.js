@@ -43,7 +43,7 @@ router.get('/all', (req, res, next) => {
     const client = new Client();
     client.connect()
         .then(() => {
-            const sql = "SELECT r.release_id, r.description, r.quotation_id, r.release_date, q.created_at AS quotation_created_at, q.title AS quotation_title, cs.name AS client_name, cs.code AS client_code FROM release_plans r INNER JOIN quotations q ON r.quotation_id=q.quotation_id INNER JOIN clients cs ON q.client_id=cs.client_id";
+            const sql = "SELECT r.release_id, r.description, r.quotation_id, r.release_date, q.created_at AS quotation_created_at, q.title AS quotation_title, cs.name AS client_name, cs.code AS client_code, q.title AS quotation_title, q.amount as quotation_amount FROM release_plans r INNER JOIN quotations q ON r.quotation_id=q.quotation_id INNER JOIN clients cs ON q.client_id=cs.client_id";
             return client.query(sql);
         })
         .then(result => {
