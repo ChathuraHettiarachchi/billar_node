@@ -17,8 +17,8 @@ const releaseRouter = require('./routes/releases');
 const app = express();
 
 app.use(cors());
-app.listen(4000, () => {
-    console.log("BillarNode is listening on port 4000")
+app.listen(8080, () => {
+    console.log("BillarNode is listening on port 4000 and 8080")
 });
 
 app.disable('etag');
