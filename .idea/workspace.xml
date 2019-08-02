@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="a6419de4-2769-4d20-a118-f7f01701e031" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/routes/project_status.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/project_status.js" afterDir="false" />
-    </list>
+    <list default="true" id="a6419de4-2769-4d20-a118-f7f01701e031" name="Default Changelist" comment="" />
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
     <ignored path="$PROJECT_DIR$/tmp/" />
@@ -36,8 +34,17 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/routes/project_status.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="251">
-              <caret line="168" column="26" selection-start-line="168" selection-start-column="19" selection-end-line="168" selection-end-column="26" />
+            <state relative-caret-position="1673">
+              <caret line="158" column="48" selection-start-line="158" selection-start-column="48" selection-end-line="158" selection-end-column="48" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/routes/clients.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-3039">
+              <caret line="23" column="43" lean-forward="true" selection-start-line="23" selection-start-column="43" selection-end-line="23" selection-end-column="43" />
             </state>
           </provider>
         </entry>
@@ -56,11 +63,13 @@
       <find>function (req, res, next)</find>
       <find>const client = new Client();</find>
       <find>client.connect()</find>
+      <find>pStatus</find>
     </findStrings>
     <replaceStrings>
       <replace>async (req, res, next) =&gt;</replace>
       <replace>const client = new Client(connectionString);</replace>
       <replace>await client.connect()</replace>
+      <replace>client</replace>
     </replaceStrings>
   </component>
   <component name="Git.Settings">
@@ -177,18 +186,17 @@
       <workItem from="1564491278102" duration="46000" />
       <workItem from="1564541968055" duration="12959000" />
       <workItem from="1564629141420" duration="6080000" />
-      <workItem from="1564717155796" duration="10427000" />
+      <workItem from="1564717155796" duration="10689000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="60146000" />
+    <option name="totallyTimeSpent" value="60408000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="0" />
-    <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.23960535" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.23960535" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="npm" order="2" side_tool="true" />
       <window_info id="DB Browser" order="3" />
@@ -204,7 +212,7 @@
       <window_info anchor="bottom" id="Version Control" order="8" />
       <window_info anchor="bottom" id="SonarLint" order="9" />
       <window_info anchor="bottom" id="DB Execution Console" order="10" />
-      <window_info anchor="bottom" id="Terminal" order="11" weight="0.3746988" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="11" visible="true" weight="0.3746988" />
       <window_info anchor="bottom" id="Event Log" order="12" side_tool="true" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -254,13 +262,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/routes/clients.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="483">
-          <caret line="23" column="43" lean-forward="true" selection-start-line="23" selection-start-column="43" selection-end-line="23" selection-end-column="43" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/routes/financials.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-120">
@@ -289,10 +290,17 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/routes/clients.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-3039">
+          <caret line="23" column="43" lean-forward="true" selection-start-line="23" selection-start-column="43" selection-end-line="23" selection-end-column="43" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/routes/project_status.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="251">
-          <caret line="168" column="26" selection-start-line="168" selection-start-column="19" selection-end-line="168" selection-end-column="26" />
+        <state relative-caret-position="1673">
+          <caret line="158" column="48" selection-start-line="158" selection-start-column="48" selection-end-line="158" selection-end-column="48" />
         </state>
       </provider>
     </entry>
