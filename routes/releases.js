@@ -24,6 +24,7 @@ router.get('/', async (req, res, next) => {
             return client.query(sql);
         })
         .then(result => {
+            client.end();
             if (result.rows.length === 0) {
                 res.status(200).json({
                     status: 1,
@@ -40,6 +41,7 @@ router.get('/', async (req, res, next) => {
             }
         })
         .catch(e => {
+            client.end();
             res.status(400).json({
                 status: 0,
                 message: 'Something went wrong',
@@ -59,6 +61,7 @@ router.get('/all', async (req, res, next) => {
             return client.query(sql);
         })
         .then(result => {
+            client.end();
             if (result.rows.length === 0) {
                 res.status(200).json({
                     status: 1,
@@ -75,6 +78,7 @@ router.get('/all', async (req, res, next) => {
             }
         })
         .catch(e => {
+            client.end();
             res.status(400).json({
                 status: 0,
                 message: 'Something went wrong',
@@ -96,6 +100,7 @@ router.get('/quotation/:id', async (req, res, next) => {
             return client.query(sql, params);
         })
         .then(result => {
+            client.end();
             if (result.rows.length === 0) {
                 res.status(200).json({
                     status: 1,
@@ -112,6 +117,7 @@ router.get('/quotation/:id', async (req, res, next) => {
             }
         })
         .catch(e => {
+            client.end();
             res.status(400).json({
                 status: 0,
                 message: 'Something went wrong',

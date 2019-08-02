@@ -26,6 +26,7 @@ router.get('/:id', async (req, res, next) => {
             return client.query(sql, params);
         })
         .then(result => {
+            client.end();
             if (result.rows.length === 0) {
                 res.status(200).json({
                     status: 1,
@@ -42,6 +43,7 @@ router.get('/:id', async (req, res, next) => {
             }
         })
         .catch(e => {
+            client.end();
             res.status(400).json({
                 status: 0,
                 message: 'Something went wrong',
@@ -62,6 +64,7 @@ router.get('/', async (req, res, next) => {
             return client.query(sql);
         })
         .then(result => {
+            client.end();
             if (result.rows.length === 0) {
                 res.status(200).json({
                     status: 1,
@@ -78,6 +81,7 @@ router.get('/', async (req, res, next) => {
             }
         })
         .catch(e => {
+            client.end();
             res.status(400).json({
                 status: 0,
                 message: 'Something went wrong',
@@ -106,12 +110,14 @@ router.post('/new', async (req, res, next) => {
             return client.query(sql, params);
         })
         .then(result => {
+            client.end();
             res.status(200).json({
                 status: 1,
                 message: 'New client added successfully'
             })
         })
         .catch(e => {
+            client.end();
             res.status(400).json({
                 status: 0,
                 message: 'Something went wrong',
@@ -134,12 +140,14 @@ router.delete('/remove/:id', async (req, res, next) => {
             return client.query(sql, params);
         })
         .then(result => {
+            client.end();
             res.status(200).json({
                 status: 1,
                 message: 'Status deleted successfully'
             });
         })
         .catch(e => {
+            client.end();
             res.status(400).json({
                 status: 0,
                 message: 'Something went wrong',
@@ -169,12 +177,14 @@ router.post('/update/:id', async (req, res, next) => {
             return client.query(sql, params);
         })
         .then(result => {
+            client.end();
             res.status(200).json({
                 status: 1,
                 message: 'Updated successfully'
             })
         })
         .catch(e => {
+            client.end();
             res.status(400).json({
                 status: 0,
                 message: 'Something went wrong',
