@@ -10,7 +10,7 @@ if (process.env.NODE_ENV === 'development') {
     }
 } else {
     connectionString = {
-        connectionString: process.env.DATABASE_URL,
+        connectionString: 'postgres://ltsatbalndpndl:d5c29d1caaa4fbc12bc0c25fe394f38d90307f515213866c6fd8737bcc919f99@ec2-54-221-238-248.compute-1.amazonaws.com:5432/d1b46s3bt2jl9t',
         ssl: true,
     }
 }
