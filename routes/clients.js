@@ -15,9 +15,6 @@ if (process.env.NODE_ENV === 'development') {
     }
 }
 
-console.log(connectionString);
-const client = new Client(connectionString);
-
 router.get('/:id', async (req, res, next) => {
     // const client = new Client();
     await client.connect()
@@ -57,6 +54,8 @@ router.get('/:id', async (req, res, next) => {
 /* GET clients listing. */
 router.get('/', async function (req, res, next) {
     // const client = new Client();
+    console.log(connectionString);
+    const client = new Client(connectionString);
     await client.connect()
         .then(() => {
             const sql = "SELECT * FROM clients ORDER BY client_id";
