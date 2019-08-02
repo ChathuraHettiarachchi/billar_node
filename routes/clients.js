@@ -1,10 +1,24 @@
 const express = require('express');
 const router = express.Router();
 
-const {Client, Pool} = require('pg');
+const {Client} = require('pg');
+
+let connectionString;
+if (process.env.NODE_ENV === 'development') {
+    connectionString = {
+        connectionString: 'billar_database'
+    }
+} else {
+    connectionString = {
+        connectionString: process.env.DATABASE_URL,
+        ssl: true,
+    }
+}
+
+const client = new Client(connectionString);
 
 router.get('/:id', (req, res, next) => {
-    const client = new Client();
+    // const client = new Client();
     client.connect()
         .then(() => {
             const sql = "SELECT * FROM clients WHERE client_id = $1";
@@ -41,7 +55,7 @@ router.get('/:id', (req, res, next) => {
 
 /* GET clients listing. */
 router.get('/', function (req, res, next) {
-    const client = new Client();
+    // const client = new Client();
     client.connect()
         .then(() => {
             const sql = "SELECT * FROM clients ORDER BY client_id";
