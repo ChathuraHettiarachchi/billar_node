@@ -40,9 +40,9 @@ router.get('/:id', (req, res, next) => {
 });
 
 /* GET clients listing. */
-router.get('/', function (req, res, next) {
+router.get('/', async function (req, res, next) {
     const client = new Client();
-    client.connect()
+    await client.connect()
         .then(() => {
             const sql = "SELECT * FROM clients ORDER BY client_id";
             return client.query(sql);
