@@ -1,5 +1,6 @@
 require('dotenv').config({path: __dirname + '/.env'});
 
+const { Pool } = require('pg');
 const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
@@ -15,6 +16,24 @@ const financeRouter = require('./routes/financials');
 const releaseRouter = require('./routes/releases');
 
 const app = express();
+
+let connectionString = {
+    user: 'choots',
+    database: process.env.PGDATABASE,
+    host: process.env.PGHOST
+};
+
+if (process.env.NODE_ENV === 'development') {
+    connectionString.database = 'billar_database';
+} else {
+    connectionString = {
+        connectionString: process.env.DATABASE_URL,
+        ssl: true
+    };
+}
+
+const pool = new Pool(connectionString);
+pool.on('connect', () => console.log('connected to db'));
 
 app.use(cors());
 app.listen(8080, () => {
