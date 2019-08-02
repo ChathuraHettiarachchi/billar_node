@@ -16,19 +16,20 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 router.get('/:id', async (req, res, next) => {
-    const pStatus = new Client();
-    pStatus.connect()
+
+    const client = new Client(connectionString);
+    await client.connect()
         .then(() => {
             const sql = "SELECT * FROM project_statuses WHERE status_id = $1";
             const params = [req.params.id];
 
-            return pStatus.query(sql, params);
+            return client.query(sql, params);
         })
         .then(result => {
             if (result.rows.length === 0) {
                 res.status(200).json({
                     status: 1,
-                    message: 'No pStatus found'
+                    message: 'No client found'
                 });
             } else {
                 res.status(200).json({
@@ -51,24 +52,25 @@ router.get('/:id', async (req, res, next) => {
         })
 });
 
-/* GET pStatuss listing. */
+/* GET clients listing. */
 router.get('/', async (req, res, next) => {
-    const pStatus = new Client();
-    pStatus.connect()
+
+    const client = new Client(connectionString);
+    await client.connect()
         .then(() => {
             const sql = "SELECT * FROM project_statuses";
-            return pStatus.query(sql);
+            return client.query(sql);
         })
         .then(result => {
             if (result.rows.length === 0) {
                 res.status(200).json({
                     status: 1,
-                    message: 'No pStatus found'
+                    message: 'No client found'
                 });
             } else {
                 res.status(200).json({
                     status: 1,
-                    message: 'Available pStatuss',
+                    message: 'Available clients',
                     content: {
                         status_list: result.rows
                     }
@@ -86,13 +88,13 @@ router.get('/', async (req, res, next) => {
         })
 });
 
-/* POST pStatuss listing. */
+/* POST clients listing. */
 router.post('/new', async (req, res, next) => {
 
-    const pStatus = new Client();
-    pStatus.connect()
+    const client = new Client(connectionString);
+    await client.connect()
         .then(() => {
-            console.log('PG connect with pStatus');
+            console.log('PG connect with client');
             console.log(req.body);
 
             const sql = "INSERT INTO project_statuses (title, color) VALUES ($1,$2)";
@@ -101,12 +103,12 @@ router.post('/new', async (req, res, next) => {
                 req.body.status.color
             ];
 
-            return pStatus.query(sql, params);
+            return client.query(sql, params);
         })
         .then(result => {
             res.status(200).json({
                 status: 1,
-                message: 'New pStatus added successfully'
+                message: 'New client added successfully'
             })
         })
         .catch(e => {
@@ -120,15 +122,16 @@ router.post('/new', async (req, res, next) => {
         });
 });
 
-/* DELETE pStatus. */
+/* DELETE client. */
 router.delete('/remove/:id', async (req, res, next) => {
-    const pStatus = new Client();
-    pStatus.connect()
+
+    const client = new Client(connectionString);
+    await client.connect()
         .then(() => {
             const sql = "DELETE FROM project_statuses WHERE status_id = $1";
             const params = [req.params.id];
 
-            return pStatus.query(sql, params);
+            return client.query(sql, params);
         })
         .then(result => {
             res.status(200).json({
@@ -147,13 +150,13 @@ router.delete('/remove/:id', async (req, res, next) => {
         })
 });
 
-/* UPDATE pStatus. */
+/* UPDATE client. */
 router.post('/update/:id', async (req, res, next) => {
 
-    const pStatus = new Client();
-    pStatus.connect()
+    const client = new Client(connectionString);
+    await client.connect()
         .then(() => {
-            console.log('PG connect with pStatus');
+            console.log('PG connect with client');
             console.log(req.body);
 
             const sql = "UPDATE project_statuses SET title = $1, color = $2 WHERE status_id = $3";
@@ -163,7 +166,7 @@ router.post('/update/:id', async (req, res, next) => {
                 req.params.id
             ];
 
-            return pStatus.query(sql, params);
+            return client.query(sql, params);
         })
         .then(result => {
             res.status(200).json({
