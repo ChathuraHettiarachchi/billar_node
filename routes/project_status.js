@@ -3,7 +3,19 @@ const router = express.Router();
 
 const {Client} = require('pg');
 
-router.get('/:id', (req, res, next) => {
+let connectionString;
+if (process.env.NODE_ENV === 'development') {
+    connectionString = {
+        connectionString: 'billar_database'
+    }
+} else {
+    connectionString = {
+        connectionString: 'postgres://ltsatbalndpndl:d5c29d1caaa4fbc12bc0c25fe394f38d90307f515213866c6fd8737bcc919f99@ec2-54-221-238-248.compute-1.amazonaws.com:5432/d1b46s3bt2jl9t',
+        ssl: true,
+    }
+}
+
+router.get('/:id', async (req, res, next) => {
     const pStatus = new Client();
     pStatus.connect()
         .then(() => {
@@ -40,7 +52,7 @@ router.get('/:id', (req, res, next) => {
 });
 
 /* GET pStatuss listing. */
-router.get('/', function (req, res, next) {
+router.get('/', async (req, res, next) => {
     const pStatus = new Client();
     pStatus.connect()
         .then(() => {
@@ -75,7 +87,7 @@ router.get('/', function (req, res, next) {
 });
 
 /* POST pStatuss listing. */
-router.post('/new', function (req, res, next) {
+router.post('/new', async (req, res, next) => {
 
     const pStatus = new Client();
     pStatus.connect()
@@ -109,7 +121,7 @@ router.post('/new', function (req, res, next) {
 });
 
 /* DELETE pStatus. */
-router.delete('/remove/:id', function (req, res, next) {
+router.delete('/remove/:id', async (req, res, next) => {
     const pStatus = new Client();
     pStatus.connect()
         .then(() => {
@@ -136,7 +148,7 @@ router.delete('/remove/:id', function (req, res, next) {
 });
 
 /* UPDATE pStatus. */
-router.post('/update/:id', function (req, res, next) {
+router.post('/update/:id', async (req, res, next) => {
 
     const pStatus = new Client();
     pStatus.connect()

@@ -3,11 +3,23 @@ const router = express.Router();
 
 const {Client} = require('pg');
 
-/* GET finance listing. */
-router.get('/', (req, res, next) => {
+let connectionString;
+if (process.env.NODE_ENV === 'development') {
+    connectionString = {
+        connectionString: 'billar_database'
+    }
+} else {
+    connectionString = {
+        connectionString: 'postgres://ltsatbalndpndl:d5c29d1caaa4fbc12bc0c25fe394f38d90307f515213866c6fd8737bcc919f99@ec2-54-221-238-248.compute-1.amazonaws.com:5432/d1b46s3bt2jl9t',
+        ssl: true,
+    }
+}
 
-    const client = new Client();
-    client.connect()
+/* GET finance listing. */
+router.get('/', async (req, res, next) => {
+
+    const client = new Client(connectionString);
+    await client.connect()
         .then(() => {
             const sql = "SELECT * FROM financials ORDER BY financial_id";
             return client.query(sql);
@@ -40,10 +52,10 @@ router.get('/', (req, res, next) => {
 });
 
 /* GET finance listing. */
-router.get('/quotation/:id', (req, res, next) => {
+router.get('/quotation/:id', async (req, res, next) => {
 
-    const client = new Client();
-    client.connect()
+    const client = new Client(connectionString);
+    await client.connect()
         .then(() => {
             const sql = "SELECT * FROM financials WHERE quotation_id = $1 ORDER BY financial_id";
             const params =[req.params.id];

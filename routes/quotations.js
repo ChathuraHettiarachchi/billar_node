@@ -4,10 +4,22 @@ const dateFormat = require('dateformat');
 
 const {Client} = require('pg');
 
+let connectionString;
+if (process.env.NODE_ENV === 'development') {
+    connectionString = {
+        connectionString: 'billar_database'
+    }
+} else {
+    connectionString = {
+        connectionString: 'postgres://ltsatbalndpndl:d5c29d1caaa4fbc12bc0c25fe394f38d90307f515213866c6fd8737bcc919f99@ec2-54-221-238-248.compute-1.amazonaws.com:5432/d1b46s3bt2jl9t',
+        ssl: true,
+    }
+}
+
 /* GET quotation*/
-router.get('/:id', (req, res, next) => {
-    const client = new Client();
-    client.connect()
+router.get('/:id', async (req, res, next) => {
+    const client = new Client(connectionString);
+    await client.connect()
         .then(() => {
             const sql = "SELECT quotations.quotation_id, quotations.title, quotations.description, quotations.amount, quotations.terms, quotations.created_at, quotations.updated_at, quotations.status,clients.code, clients.client_id, clients.email, clients.address_line_first, clients.address_line_last, clients.contact_number, clients.name " +
                 "FROM quotations INNER JOIN clients ON quotations.client_id=clients.client_id " +
@@ -44,9 +56,9 @@ router.get('/:id', (req, res, next) => {
 });
 
 /* GET quotations*/
-router.get('/', function (req, res, next) {
-    const client = new Client();
-    client.connect()
+router.get('/', async (req, res, next) => {
+    const client = new Client(connectionString);
+    await client.connect()
         .then(() => {
             const sql = "SELECT quotations.quotation_id, quotations.title, quotations.description, quotations.amount, " +
                 "quotations.terms, quotations.created_at, quotations.updated_at, quotations.status, clients.code, clients.client_id" +
@@ -81,12 +93,12 @@ router.get('/', function (req, res, next) {
 });
 
 /* POST quotation*/
-router.post('/new', function (req, res, next) {
+router.post('/new', async (req, res, next) => {
 
-    const client = new Client();
+    const client = new Client(connectionString);
     let now = new Date();
 
-    client.connect()
+    await client.connect()
         .then(() => {
             console.log('PG connect with quotation');
             console.log(req.body);
@@ -165,9 +177,9 @@ router.post('/new', function (req, res, next) {
 });
 
 /* DELETE quotation*/
-router.delete('/remove/:id', function (req, res, next) {
-    const client = new Client();
-    client.connect()
+router.delete('/remove/:id', async (req, res, next) => {
+    const client = new Client(connectionString);
+    await client.connect()
         .then(() => {
             const sql = "DELETE FROM financials WHERE quotation_id = $1";
             const params = [req.params.id];
@@ -210,14 +222,14 @@ router.delete('/remove/:id', function (req, res, next) {
 });
 
 // /* UPDATE quotation*/
-router.post('/update/:id', function (req, res, next) {
+router.post('/update/:id', async (req, res, next) => {
 
-    const client = new Client();
+    const client = new Client(connectionString);
     let now = new Date();
 
     console.log(req.body);
 
-    client.connect()
+    await client.connect()
         .then(() => {
             console.log('PG connect with quotation');
             console.log(req.body);
@@ -307,11 +319,11 @@ router.post('/update/:id', function (req, res, next) {
 });
 
 /* UPDATE status*/
-router.post('/update/:id/status', (req, res, next) => {
+router.post('/update/:id/status', async (req, res, next) => {
 
     let now = new Date();
-    const client = new Client();
-    client.connect()
+    const client = new Client(connectionString);
+    await client.connect()
         .then(() => {
             console.log('PG connect with quotation');
             console.log(req.body);

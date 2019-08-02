@@ -16,7 +16,8 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 router.get('/:id', async (req, res, next) => {
-    // const client = new Client();
+    // const client = new Client(connectionString);
+    const client = new Client(connectionString);
     await client.connect()
         .then(() => {
             const sql = "SELECT * FROM clients WHERE client_id = $1";
@@ -52,9 +53,8 @@ router.get('/:id', async (req, res, next) => {
 });
 
 /* GET clients listing. */
-router.get('/', async function (req, res, next) {
-    // const client = new Client();
-    console.log(connectionString);
+router.get('/', async (req, res, next) => {
+    // const client = new Client(connectionString);
     const client = new Client(connectionString);
     await client.connect()
         .then(() => {
@@ -89,10 +89,10 @@ router.get('/', async function (req, res, next) {
 });
 
 /* POST clients listing. */
-router.post('/new', function (req, res, next) {
+router.post('/new', async (req, res, next) => {
 
-    const client = new Client();
-    client.connect()
+    const client = new Client(connectionString);
+    await client.connect()
         .then(() => {
             console.log('PG connect with client');
             console.log(req.body);
@@ -129,9 +129,10 @@ router.post('/new', function (req, res, next) {
 });
 
 /* DELETE client. */
-router.delete('/remove/:id', function (req, res, next) {
-    const client = new Client();
-    client.connect()
+router.delete('/remove/:id', async (req, res, next) =>{
+
+    const client = new Client(connectionString);
+    await client.connect()
         .then(() => {
             const sql = "DELETE FROM clients WHERE client_id = $1";
             const params = [req.params.id];
@@ -156,10 +157,10 @@ router.delete('/remove/:id', function (req, res, next) {
 });
 
 /* UPDATE client. */
-router.post('/update/:id', function (req, res, next) {
+router.post('/update/:id', async (req, res, next) => {
 
-    const client = new Client();
-    client.connect()
+    const client = new Client(connectionString);
+    await client.connect()
         .then(() => {
             console.log('PG connect with client');
             console.log(req.body);
