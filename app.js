@@ -17,24 +17,6 @@ const releaseRouter = require('./routes/releases');
 
 const app = express();
 
-let connectionString = {
-    user: 'choots',
-    database: process.env.PGDATABASE,
-    host: process.env.PGHOST
-};
-
-if (process.env.NODE_ENV === 'development') {
-    connectionString.database = 'billar_database';
-} else {
-    connectionString = {
-        connectionString: process.env.DATABASE_URL,
-        ssl: true
-    };
-}
-
-const pool = new Pool(connectionString);
-pool.on('connect', () => console.log('connected to db'));
-
 app.use(cors());
 app.listen(8080, () => {
     console.log("BillarNode is listening on port 4000 and 8080")

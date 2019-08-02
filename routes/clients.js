@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const {Client} = require('pg');
+const {Client, Pool} = require('pg');
 
 router.get('/:id', (req, res, next) => {
     const client = new Client();
@@ -40,9 +40,9 @@ router.get('/:id', (req, res, next) => {
 });
 
 /* GET clients listing. */
-router.get('/', async function (req, res, next) {
+router.get('/', function (req, res, next) {
     const client = new Client();
-    await client.connect()
+    client.connect()
         .then(() => {
             const sql = "SELECT * FROM clients ORDER BY client_id";
             return client.query(sql);
