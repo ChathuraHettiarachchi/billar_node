@@ -14,6 +14,7 @@ router.get('/:id', async (req, res, next) => {
         client.query(sql, params, (err, result) => {
             release();
             if (err) {
+                console.log(err);
                 res.status(400).json({
                     status: 0,
                     message: 'Something went wrong',
@@ -51,6 +52,7 @@ router.get('/', async (req, res, next) => {
         client.query(sql, (err, result) => {
             release();
             if (err) {
+                console.log(err);
                 res.status(400).json({
                     status: 0,
                     message: 'Something went wrong',
@@ -99,6 +101,7 @@ router.post('/new', async (req, res, next) => {
         client.query(sql, params, (err, result) => {
             if (err) {
                 release();
+                console.log(err);
                 res.status(400).json({status: 0, message: 'Something went wrong', content: {error: err}});
             } else {
                 console.log('PG connect with finance');
@@ -117,6 +120,7 @@ router.post('/new', async (req, res, next) => {
                 client.query(sql, (err2, result2) => {
                     if (err2) {
                         release();
+                        console.log(err2);
                         res.status(400).json({status: 0, message: 'Something went wrong', content: {error: err2}});
                     } else {
                         console.log('PG connect with releases');
@@ -132,6 +136,7 @@ router.post('/new', async (req, res, next) => {
                         const sql = format('INSERT INTO release_plans (description, release_date, quotation_id) VALUES %L RETURNING quotation_id', array);
                         client.query(sql, (err3, result3) => {
                             if (err3) {
+                                console.log(err3);
                                 release();
                                 res.status(400).json({
                                     status: 0,
@@ -153,6 +158,7 @@ router.post('/new', async (req, res, next) => {
                                 client.query(sql, (err4, result4) => {
                                     release();
                                     if (err4) {
+                                        console.log(err4);
                                         res.status(400).json({
                                             status: 0,
                                             message: 'Something went wrong',
@@ -180,6 +186,7 @@ router.delete('/remove/:id', async (req, res, next) => {
     await pool.connect((err, client, release) => {
         if (err){
             release();
+            console.log(err);
             res.status(400).json({status: 0, message: 'Something went wrong', content: {error: err}});
         } else {
             const sql = "DELETE FROM financials WHERE quotation_id = $1";
@@ -188,6 +195,7 @@ router.delete('/remove/:id', async (req, res, next) => {
             client.query(sql, params, (err2, result2) => {
                 if (err2){
                     release();
+                    console.log(err2);
                     res.status(400).json({status: 0, message: 'Something went wrong', content: {error: err2}});
                 } else {
                     const sql = "DELETE FROM release_plans WHERE quotation_id = $1";
@@ -196,6 +204,7 @@ router.delete('/remove/:id', async (req, res, next) => {
                     client.query(sql, params, (err3, result3) => {
                         if (err3){
                             release();
+                            console.log(err3);
                             res.status(400).json({status: 0, message: 'Something went wrong', content: {error: err3}});
                         } else {
                             const sql = "DELETE FROM payment_plans WHERE quotation_id = $1";
@@ -204,6 +213,7 @@ router.delete('/remove/:id', async (req, res, next) => {
                             client.query(sql, params, (err4, result4) => {
                                 if (err4){
                                     release();
+                                    console.log(err4);
                                     res.status(400).json({status: 0, message: 'Something went wrong', content: {error: err4}});
                                 } else {
                                     const sql = "DELETE FROM quotations WHERE quotation_id = $1";
@@ -212,6 +222,7 @@ router.delete('/remove/:id', async (req, res, next) => {
                                     client.query(sql, params, (err5, result5) => {
                                         release();
                                         if(err5){
+                                            console.log(err5);
                                             res.status(400).json({status: 0, message: 'Something went wrong', content: {error: err5}});
                                         } else {
                                             res.status(200).json({
@@ -238,6 +249,7 @@ router.post('/update/:id', async (req, res, next) => {
     await pool.connect((err, client, release) => {
         if (err){
             release();
+            console.log(err);
             res.status(400).json({status: 0, message: 'Something went wrong', content: {error: err}});
         } else {
             console.log('PG connect with quotation');
@@ -256,12 +268,14 @@ router.post('/update/:id', async (req, res, next) => {
             client.query(sql, params, (err2, result2) => {
                 if (err2){
                     release();
+                    console.log(err2);
                     res.status(400).json({status: 0, message: 'Something went wrong', content: {error: err2}});
                 } else {
                     const sql = "DELETE FROM financials WHERE quotation_id = $1";
                     client.query(sql, [req.params.id], (err3, result3) => {
                         if (err3){
                             release();
+                            console.log(err3);
                             res.status(400).json({status: 0, message: 'Something went wrong', content: {error: err3}});
                         } else {
                             console.log('PG connect with finance');
@@ -276,16 +290,23 @@ router.post('/update/:id', async (req, res, next) => {
                                 array.push(params)
                             }
 
-                            const sql = format('INSERT INTO financials (description, amount, quotation_id) VALUES %L RETURNING quotation_id', array);
+                            let sql = "";
+                            if (array.length === 0){
+                                sql = "--NODATA";
+                            } else {
+                                sql = format('INSERT INTO financials (description, amount, quotation_id) VALUES %L RETURNING quotation_id', array);
+                            }
                             client.query(sql, (err4, result4) => {
                                 if (err4){
                                     release();
+                                    console.log(err4);
                                     res.status(400).json({status: 0, message: 'Something went wrong', content: {error: err4}});
                                 } else {
                                     const sql = "DELETE FROM release_plans WHERE quotation_id = $1";
                                     client.query(sql, [req.params.id], (err5, result5) => {
                                         if(err5){
                                             release();
+                                            console.log(err5);
                                             res.status(400).json({status: 0, message: 'Something went wrong', content: {error: err5}});
                                         } else {
                                             console.log('PG connect with releases');
@@ -298,16 +319,23 @@ router.post('/update/:id', async (req, res, next) => {
                                                 array.push(params);
                                             }
 
-                                            const sql = format('INSERT INTO release_plans (description, release_date, quotation_id) VALUES %L RETURNING quotation_id', array);
+                                            let sql = "";
+                                            if (array.length === 0){
+                                                sql = "--NODATA";
+                                            } else {
+                                                sql = format('INSERT INTO release_plans (description, release_date, quotation_id) VALUES %L RETURNING quotation_id', array);
+                                            }
                                             client.query(sql, (err6, result6) => {
                                                 if (err6){
                                                     release();
+                                                    console.log(err6);
                                                     res.status(400).json({status: 0, message: 'Something went wrong', content: {error: err6}});
                                                 } else {
                                                     const sql = "DELETE FROM payment_plans WHERE quotation_id = $1";
                                                     client.query(sql, [req.params.id], (err7, result7) => {
                                                         if (err7){
                                                             release();
+                                                            console.log(err7);
                                                             res.status(400).json({status: 0, message: 'Something went wrong', content: {error: err7}});
                                                         } else {
                                                             console.log('PG connect with payment');
@@ -320,10 +348,16 @@ router.post('/update/:id', async (req, res, next) => {
                                                                 array.push(params)
                                                             }
 
-                                                            const sql = format('INSERT INTO payment_plans (description, amount, invoice_date, quotation_id) VALUES %L RETURNING quotation_id', array);
+                                                            let sql = "";
+                                                            if (array.length === 0){
+                                                                sql = "--NODATA";
+                                                            } else {
+                                                                sql = format('INSERT INTO payment_plans (description, amount, invoice_date, quotation_id) VALUES %L RETURNING quotation_id', array);
+                                                            }
                                                             client.query(sql, (err8, result8) => {
                                                                 release();
                                                                 if (err8){
+                                                                    console.log(err8);
                                                                     res.status(400).json({status: 0, message: 'Something went wrong', content: {error: err8}});
                                                                 } else {
                                                                     res.status(200).json({status: 1, message: 'Quotations updated successfully'})
@@ -352,6 +386,7 @@ router.post('/update/:id/status', async (req, res, next) => {
     await pool.connect((err, client, release) => {
         if (err){
             release();
+            console.log(err);
             res.status(400).json({status: 0, message: 'Something went wrong', content: {error: err}});
         } else {
             console.log('PG connect with quotation');
@@ -368,6 +403,7 @@ router.post('/update/:id/status', async (req, res, next) => {
             client.query(sql, params, (err2, result2) => {
                 release();
                 if(err2){
+                    console.log(err2);
                     res.status(400).json({status: 0, message: 'Something went wrong', content: {error: err2}});
                 } else {
                     res.status(200).json({

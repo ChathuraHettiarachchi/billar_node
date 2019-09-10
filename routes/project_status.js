@@ -6,6 +6,7 @@ router.get('/:id', async (req, res, next) => {
     await pool.connect((err, client, release) => {
         if (err){
             release();
+            console.log(err);
             res.status(400).json({status: 0, message: 'Something went wrong', content: {error: err}});
         } else {
             const sql = "SELECT * FROM project_statuses WHERE status_id = $1";
@@ -14,6 +15,7 @@ router.get('/:id', async (req, res, next) => {
             client.query(sql, params, (err2, result2) => {
                 release();
                 if (err2){
+                    console.log(err2);
                     res.status(400).json({status: 0, message: 'Something went wrong', content: {error: err2}});
                 } else {
                     if (result2.rows.length === 0) {
@@ -41,12 +43,14 @@ router.get('/', async (req, res, next) => {
     await pool.connect((err, client, release) => {
         if (err){
             release();
+            console.log(err);
             res.status(400).json({status: 0, message: 'Something went wrong', content: {error: err}});
         } else {
             const sql = "SELECT * FROM project_statuses";
             client.query(sql, (err2, result2) => {
                 release();
                 if (err2){
+                    console.log(err2);
                     res.status(400).json({status: 0, message: 'Something went wrong', content: {error: err2}});
                 } else {
                     if (result2.rows.length === 0) {
@@ -74,6 +78,7 @@ router.post('/new', async (req, res, next) => {
     await pool.connect((err, client, release) => {
         if (err){
             release();
+            console.log(err);
             res.status(400).json({status: 0, message: 'Something went wrong', content: {error: err}});
         } else {
             console.log('PG connect with client');
@@ -88,6 +93,7 @@ router.post('/new', async (req, res, next) => {
             client.query(sql, params, (err2, result2) => {
                 release();
                 if (err2){
+                    console.log(err2);
                     res.status(400).json({status: 0, message: 'Something went wrong', content: {error: err2}});
                 } else {
                     res.status(200).json({
@@ -105,6 +111,7 @@ router.delete('/remove/:id', async (req, res, next) => {
     await pool.connect((err, client, release) => {
         if (err){
             release();
+            console.log(err);
             res.status(400).json({status: 0, message: 'Something went wrong', content: {error: err}});
         } else {
             const sql = "DELETE FROM project_statuses WHERE status_id = $1";
@@ -113,6 +120,7 @@ router.delete('/remove/:id', async (req, res, next) => {
             client.query(sql, params, (err2, result2) => {
                 release();
                 if(err2){
+                    console.log(err2);
                     res.status(400).json({status: 0, message: 'Something went wrong', content: {error: err2}});
                 } else {
                     res.status(200).json({
@@ -130,6 +138,7 @@ router.post('/update/:id', async (req, res, next) => {
     await pool.connect((err, client, release) => {
         if (err){
             release();
+            console.log(err);
             res.status(400).json({status: 0, message: 'Something went wrong', content: {error: err}});
         } else {
             console.log('PG connect with client');
@@ -145,6 +154,7 @@ router.post('/update/:id', async (req, res, next) => {
             client.query(sql, params, (err2, result2) => {
                 release();
                 if (err2){
+                    console.log(err2);
                     res.status(400).json({status: 0, message: 'Something went wrong', content: {error: err2}});
                 } else {
                     res.status(200).json({

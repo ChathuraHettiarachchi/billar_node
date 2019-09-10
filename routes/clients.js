@@ -6,6 +6,7 @@ router.get('/:id', async (req, res, next) => {
     await pool.connect((err, client, release) => {
         if(err){
             release();
+            console.log(err);
             res.status(400).json({status: 0, message: 'Something went wrong', content: {error: err}});
         } else {
             const sql = "SELECT * FROM clients WHERE client_id = $1";
@@ -14,6 +15,7 @@ router.get('/:id', async (req, res, next) => {
             client.query(sql, params, (err2, result2) => {
                 if (err2){
                     release();
+                    console.log(err2);
                     res.status(400).json({status: 0, message: 'Something went wrong', content: {error: err2}});
                 } else {
                     release();
@@ -41,12 +43,16 @@ router.get('/:id', async (req, res, next) => {
 router.get('/', async (req, res, next) => {
     await pool.connect((err, client, release) => {
         if(err){
+            release();
+            console.log(err);
             res.status(400).json({status: 0, message: 'Something went wrong', content: {error: err}});
         } else {
             const sql = "SELECT * FROM clients ORDER BY client_id";
 
             client.query(sql, (err2, result2) => {
+                release();
                 if (err2){
+                    console.log(err2);
                     res.status(400).json({status: 0, message: 'Something went wrong', content: {error: err2}});
                 } else {
                     if (result2.rows.length === 0) {
@@ -67,25 +73,6 @@ router.get('/', async (req, res, next) => {
             });
         }
     })
-    await pool.connect()
-        .then(() => {
-            const sql = "SELECT * FROM clients ORDER BY client_id";
-            return pool.query(sql);
-        })
-        .then(result => {
-
-
-        })
-        .catch(e => {
-
-            res.status(400).json({
-                status: 0,
-                message: 'Something went wrong',
-                content: {
-                    error: e
-                }
-            });
-        })
 });
 
 /* POST clients listing. */
@@ -93,6 +80,7 @@ router.post('/new', async (req, res, next) => {
     await pool.connect((err, client, release) => {
         if (err){
             release();
+            console.log(err);
             res.status(400).json({status: 0, message: 'Something went wrong', content: {error: err}});
         } else {
             console.log('PG connect with client');
@@ -113,6 +101,7 @@ router.post('/new', async (req, res, next) => {
             client.query(sql, params, (err2, result2) => {
                 release();
                 if(err2){
+                    console.log(err2);
                     res.status(400).json({status: 0, message: 'Something went wrong', content: {error: err2}});
                 } else {
                     res.status(200).json({
@@ -129,6 +118,7 @@ router.post('/new', async (req, res, next) => {
 router.delete('/remove/:id', async (req, res, next) => {
     await pool.connect((err, client, release) => {
         if (err){
+            console.log(err);
             res.status(400).json({status: 0, message: 'Something went wrong', content: {error: err}});
         } else {
             const sql = "DELETE FROM clients WHERE client_id = $1";
@@ -136,6 +126,7 @@ router.delete('/remove/:id', async (req, res, next) => {
 
             client.query(sql, params, (err2, result2) => {
                 if(err2){
+                    console.log(err2);
                     res.status(400).json({status: 0, message: 'Something went wrong', content: {error: err2}});
                 } else {
                     res.status(200).json({
@@ -153,6 +144,7 @@ router.post('/update/:id', async (req, res, next) => {
     await pool.connect((err, client, release) => {
         if (err){
             release();
+            console.log(err);
             res.status(400).json({status: 0, message: 'Something went wrong', content: {error: err}});
         } else {
             console.log('PG connect with client');
@@ -174,6 +166,7 @@ router.post('/update/:id', async (req, res, next) => {
             client.query(sql, params, (err2, result2) => {
                 release();
                 if (err2){
+                    console.log(err2);
                     res.status(400).json({status: 0, message: 'Something went wrong', content: {error: errr}});
                 } else {
                     res.status(200).json({
