@@ -16,6 +16,8 @@ const releaseRouter = require('./routes/releases');
 
 const app = express();
 
+const testVari = process.env.NODE_ENV = process.env.NODE_ENV || 'development';
+
 app.use(cors());
 app.listen(8080, () => {
     console.log("BillarNode is listening on port 4000 and 8080")

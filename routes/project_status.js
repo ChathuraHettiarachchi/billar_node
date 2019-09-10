@@ -1,103 +1,81 @@
 const express = require('express');
 const router = express.Router();
-
-const {Client} = require('pg');
-
-let connectionString;
-if (process.env.NODE_ENV === 'development') {
-    connectionString = {
-        connectionString: 'billar_database'
-    }
-} else {
-    connectionString = {
-        connectionString: 'postgres://ltsatbalndpndl:d5c29d1caaa4fbc12bc0c25fe394f38d90307f515213866c6fd8737bcc919f99@ec2-54-221-238-248.compute-1.amazonaws.com:5432/d1b46s3bt2jl9t',
-        ssl: true,
-    }
-}
+const { pool } = require('./config');
 
 router.get('/:id', async (req, res, next) => {
-
-    const client = new Client(connectionString);
-    await client.connect()
-        .then(() => {
+    await pool.connect((err, client, release) => {
+        if (err){
+            release();
+            res.status(400).json({status: 0, message: 'Something went wrong', content: {error: err}});
+        } else {
             const sql = "SELECT * FROM project_statuses WHERE status_id = $1";
             const params = [req.params.id];
 
-            return client.query(sql, params);
-        })
-        .then(result => {
-            client.end();
-            if (result.rows.length === 0) {
-                res.status(200).json({
-                    status: 1,
-                    message: 'No client found'
-                });
-            } else {
-                res.status(200).json({
-                    status: 1,
-                    message: 'Available details',
-                    content: {
-                        status: result.rows[0]
+            client.query(sql, params, (err2, result2) => {
+                release();
+                if (err2){
+                    res.status(400).json({status: 0, message: 'Something went wrong', content: {error: err2}});
+                } else {
+                    if (result2.rows.length === 0) {
+                        res.status(200).json({
+                            status: 1,
+                            message: 'No client found'
+                        });
+                    } else {
+                        res.status(200).json({
+                            status: 1,
+                            message: 'Available details',
+                            content: {
+                                status: result2.rows[0]
+                            }
+                        });
                     }
-                });
-            }
-        })
-        .catch(e => {
-            client.end();
-            res.status(400).json({
-                status: 0,
-                message: 'Something went wrong',
-                content: {
-                    error: e
                 }
-            });
-        })
+            })
+        }
+    })
 });
 
 /* GET clients listing. */
 router.get('/', async (req, res, next) => {
-
-    const client = new Client(connectionString);
-    await client.connect()
-        .then(() => {
+    await pool.connect((err, client, release) => {
+        if (err){
+            release();
+            res.status(400).json({status: 0, message: 'Something went wrong', content: {error: err}});
+        } else {
             const sql = "SELECT * FROM project_statuses";
-            return client.query(sql);
-        })
-        .then(result => {
-            client.end();
-            if (result.rows.length === 0) {
-                res.status(200).json({
-                    status: 1,
-                    message: 'No client found'
-                });
-            } else {
-                res.status(200).json({
-                    status: 1,
-                    message: 'Available clients',
-                    content: {
-                        status_list: result.rows
+            client.query(sql, (err2, result2) => {
+                release();
+                if (err2){
+                    res.status(400).json({status: 0, message: 'Something went wrong', content: {error: err2}});
+                } else {
+                    if (result2.rows.length === 0) {
+                        res.status(200).json({
+                            status: 1,
+                            message: 'No client found'
+                        });
+                    } else {
+                        res.status(200).json({
+                            status: 1,
+                            message: 'Available clients',
+                            content: {
+                                status_list: result2.rows
+                            }
+                        });
                     }
-                });
-            }
-        })
-        .catch(e => {
-            client.end();
-            res.status(400).json({
-                status: 0,
-                message: 'Something went wrong',
-                content: {
-                    error: e
                 }
-            });
-        })
+            })
+        }
+    })
 });
 
 /* POST clients listing. */
 router.post('/new', async (req, res, next) => {
-
-    const client = new Client(connectionString);
-    await client.connect()
-        .then(() => {
+    await pool.connect((err, client, release) => {
+        if (err){
+            release();
+            res.status(400).json({status: 0, message: 'Something went wrong', content: {error: err}});
+        } else {
             console.log('PG connect with client');
             console.log(req.body);
 
@@ -107,63 +85,53 @@ router.post('/new', async (req, res, next) => {
                 req.body.status.color
             ];
 
-            return client.query(sql, params);
-        })
-        .then(result => {
-            client.end();
-            res.status(200).json({
-                status: 1,
-                message: 'New client added successfully'
-            })
-        })
-        .catch(e => {
-            client.end();
-            res.status(400).json({
-                status: 0,
-                message: 'Something went wrong',
-                content: {
-                    error: e
+            client.query(sql, params, (err2, result2) => {
+                release();
+                if (err2){
+                    res.status(400).json({status: 0, message: 'Something went wrong', content: {error: err2}});
+                } else {
+                    res.status(200).json({
+                        status: 1,
+                        message: 'New client added successfully'
+                    })
                 }
-            });
-        });
+            })
+        }
+    })
 });
 
 /* DELETE client. */
 router.delete('/remove/:id', async (req, res, next) => {
-
-    const client = new Client(connectionString);
-    await client.connect()
-        .then(() => {
+    await pool.connect((err, client, release) => {
+        if (err){
+            release();
+            res.status(400).json({status: 0, message: 'Something went wrong', content: {error: err}});
+        } else {
             const sql = "DELETE FROM project_statuses WHERE status_id = $1";
             const params = [req.params.id];
 
-            return client.query(sql, params);
-        })
-        .then(result => {
-            client.end();
-            res.status(200).json({
-                status: 1,
-                message: 'Status deleted successfully'
-            });
-        })
-        .catch(e => {
-            client.end();
-            res.status(400).json({
-                status: 0,
-                message: 'Something went wrong',
-                content: {
-                    error: e
+            client.query(sql, params, (err2, result2) => {
+                release();
+                if(err2){
+                    res.status(400).json({status: 0, message: 'Something went wrong', content: {error: err2}});
+                } else {
+                    res.status(200).json({
+                        status: 1,
+                        message: 'Status deleted successfully'
+                    });
                 }
-            });
-        })
+            })
+        }
+    })
 });
 
 /* UPDATE client. */
 router.post('/update/:id', async (req, res, next) => {
-
-    const client = new Client(connectionString);
-    await client.connect()
-        .then(() => {
+    await pool.connect((err, client, release) => {
+        if (err){
+            release();
+            res.status(400).json({status: 0, message: 'Something went wrong', content: {error: err}});
+        } else {
             console.log('PG connect with client');
             console.log(req.body);
 
@@ -174,25 +142,19 @@ router.post('/update/:id', async (req, res, next) => {
                 req.params.id
             ];
 
-            return client.query(sql, params);
-        })
-        .then(result => {
-            client.end();
-            res.status(200).json({
-                status: 1,
-                message: 'Updated successfully'
-            })
-        })
-        .catch(e => {
-            client.end();
-            res.status(400).json({
-                status: 0,
-                message: 'Something went wrong',
-                content: {
-                    error: e
+            client.query(sql, params, (err2, result2) => {
+                release();
+                if (err2){
+                    res.status(400).json({status: 0, message: 'Something went wrong', content: {error: err2}});
+                } else {
+                    res.status(200).json({
+                        status: 1,
+                        message: 'Updated successfully'
+                    })
                 }
-            });
-        });
+            })
+        }
+    })
 });
 
 module.exports = router;
