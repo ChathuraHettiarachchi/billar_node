@@ -96,6 +96,7 @@ router.post('/update/amount', async (req, res, next) => {
                     console.log(err2);
                     res.status(400).json({status: 0, message: 'Something went wrong', content: {error: err2}});
                 } else {
+                    release()
                     res.status(200).json({
                         status: 1,
                         message: 'Payment updated'
