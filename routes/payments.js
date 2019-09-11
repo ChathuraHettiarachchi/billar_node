@@ -73,6 +73,39 @@ router.get('/quotation/:id', async (req, res, next) => {
     })
 });
 
+/* POST quotation sent amount*/
+router.post('/update/amount', async (req, res, next) => {
+    await pool.connect((err, client, release) => {
+        if (err){
+            release();
+            console.log(err);
+            res.status(400).json({status: 0, message: 'Something went wrong', content: {error: err}});
+        } else {
+            console.log('PG connect with payments');
+            console.log(req.body);
+
+            const sql = "UPDATE payment_plans SET sent_to_client = $1 WHERE payment_id = $2";
+            const params = [
+                req.body.payment.amount,
+                req.body.payment.id
+            ];
+
+            client.query(sql, params, (err2, result2) => {
+                if (err2){
+                    release();
+                    console.log(err2);
+                    res.status(400).json({status: 0, message: 'Something went wrong', content: {error: err2}});
+                } else {
+                    res.status(200).json({
+                        status: 1,
+                        message: 'Payment updated'
+                    });
+                }
+            })
+        }
+    })
+});
+
 /* GET quotations*/
 router.get('/all', async (req, res, next) => {
     await pool.connect((err, client, release) => {
