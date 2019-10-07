@@ -117,7 +117,7 @@ router.post('/new', async (req, res, next) => {
                 }
 
                 let sql = "";
-                if (array.length === 0){
+                if (array.length === 0) {
                     sql = "--NODATA";
                 } else {
                     sql = format('INSERT INTO financials (description, amount, quotation_id) VALUES %L RETURNING quotation_id', array);
@@ -140,7 +140,7 @@ router.post('/new', async (req, res, next) => {
                         }
 
                         let sql = "";
-                        if (array.length === 0){
+                        if (array.length === 0) {
                             sql = "--NODATA";
                         } else {
                             sql = format('INSERT INTO release_plans (description, release_date, quotation_id) VALUES %L RETURNING quotation_id', array);
@@ -167,7 +167,7 @@ router.post('/new', async (req, res, next) => {
                                 }
 
                                 let sql = "";
-                                if (array.length === 0){
+                                if (array.length === 0) {
                                     sql = "--NODATA";
                                 } else {
                                     sql = format('INSERT INTO payment_plans (description, amount, invoice_date, quotation_id) VALUES %L RETURNING quotation_id', array);
@@ -202,7 +202,7 @@ router.post('/new', async (req, res, next) => {
 /* DELETE quotation*/
 router.delete('/remove/:id', async (req, res, next) => {
     await pool.connect((err, client, release) => {
-        if (err){
+        if (err) {
             release();
             console.log(err);
             res.status(400).json({status: 0, message: 'Something went wrong', content: {error: err}});
@@ -211,7 +211,7 @@ router.delete('/remove/:id', async (req, res, next) => {
             const params = [req.params.id];
 
             client.query(sql, params, (err2, result2) => {
-                if (err2){
+                if (err2) {
                     release();
                     console.log(err2);
                     res.status(400).json({status: 0, message: 'Something went wrong', content: {error: err2}});
@@ -220,7 +220,7 @@ router.delete('/remove/:id', async (req, res, next) => {
                     const params = [req.params.id];
 
                     client.query(sql, params, (err3, result3) => {
-                        if (err3){
+                        if (err3) {
                             release();
                             console.log(err3);
                             res.status(400).json({status: 0, message: 'Something went wrong', content: {error: err3}});
@@ -229,19 +229,27 @@ router.delete('/remove/:id', async (req, res, next) => {
                             const params = [req.params.id];
 
                             client.query(sql, params, (err4, result4) => {
-                                if (err4){
+                                if (err4) {
                                     release();
                                     console.log(err4);
-                                    res.status(400).json({status: 0, message: 'Something went wrong', content: {error: err4}});
+                                    res.status(400).json({
+                                        status: 0,
+                                        message: 'Something went wrong',
+                                        content: {error: err4}
+                                    });
                                 } else {
                                     const sql = "DELETE FROM quotations WHERE quotation_id = $1";
                                     const params = [req.params.id];
 
                                     client.query(sql, params, (err5, result5) => {
                                         release();
-                                        if(err5){
+                                        if (err5) {
                                             console.log(err5);
-                                            res.status(400).json({status: 0, message: 'Something went wrong', content: {error: err5}});
+                                            res.status(400).json({
+                                                status: 0,
+                                                message: 'Something went wrong',
+                                                content: {error: err5}
+                                            });
                                         } else {
                                             res.status(200).json({
                                                 status: 1,
@@ -260,12 +268,149 @@ router.delete('/remove/:id', async (req, res, next) => {
 });
 
 // /* UPDATE quotation*/
+// router.post('/update/:id', async (req, res, next) => {
+//     let now = new Date();
+//     console.log(req.body);
+//
+//     await pool.connect((err, client, release) => {
+//         if (err){
+//             release();
+//             console.log(err);
+//             res.status(400).json({status: 0, message: 'Something went wrong', content: {error: err}});
+//         } else {
+//             console.log('PG connect with quotation');
+//             console.log(req.body);
+//
+//             const sql = "UPDATE quotations SET updated_at = $1, title = $2, description = $3, amount = $4, terms = $5 WHERE quotation_id = $6";
+//             const params = [
+//                 dateFormat(now, "isoDateTime"),
+//                 req.body.quotation.title,
+//                 req.body.quotation.description,
+//                 req.body.quotation.amount,
+//                 req.body.quotation.terms,
+//                 req.params.id
+//             ];
+//
+//             client.query(sql, params, (err2, result2) => {
+//                 if (err2){
+//                     release();
+//                     console.log(err2);
+//                     res.status(400).json({status: 0, message: 'Something went wrong', content: {error: err2}});
+//                 } else {
+//                     const sql = "DELETE FROM financials WHERE quotation_id = $1";
+//                     client.query(sql, [req.params.id], (err3, result3) => {
+//                         if (err3){
+//                             release();
+//                             console.log(err3);
+//                             res.status(400).json({status: 0, message: 'Something went wrong', content: {error: err3}});
+//                         } else {
+//                             console.log('PG connect with finance');
+//
+//                             const quot_id = req.params.id;
+//
+//                             let fin = req.body.quotation.financials;
+//                             let i;
+//                             let array = [];
+//                             for (i = 0; i < fin.length; i++) {
+//                                 const params = [fin[i].description, fin[i].amount, quot_id];
+//                                 array.push(params)
+//                             }
+//
+//                             let sql = "";
+//                             if (array.length === 0){
+//                                 sql = "--NODATA";
+//                             } else {
+//                                 sql = format('INSERT INTO financials (description, amount, quotation_id) VALUES %L RETURNING quotation_id', array);
+//                             }
+//                             client.query(sql, (err4, result4) => {
+//                                 if (err4){
+//                                     release();
+//                                     console.log(err4);
+//                                     res.status(400).json({status: 0, message: 'Something went wrong', content: {error: err4}});
+//                                 } else {
+//                                     const sql = "DELETE FROM release_plans WHERE quotation_id = $1";
+//                                     client.query(sql, [req.params.id], (err5, result5) => {
+//                                         if(err5){
+//                                             release();
+//                                             console.log(err5);
+//                                             res.status(400).json({status: 0, message: 'Something went wrong', content: {error: err5}});
+//                                         } else {
+//                                             console.log('PG connect with releases');
+//
+//                                             let rel = req.body.quotation.releases;
+//                                             let i;
+//                                             let array = [];
+//                                             for (i = 0; i < rel.length; i++) {
+//                                                 const params = [rel[i].description, rel[i].release_date, req.params.id];
+//                                                 array.push(params);
+//                                             }
+//
+//                                             let sql = "";
+//                                             if (array.length === 0){
+//                                                 sql = "--NODATA";
+//                                             } else {
+//                                                 sql = format('INSERT INTO release_plans (description, release_date, quotation_id) VALUES %L RETURNING quotation_id', array);
+//                                             }
+//                                             client.query(sql, (err6, result6) => {
+//                                                 if (err6){
+//                                                     release();
+//                                                     console.log(err6);
+//                                                     res.status(400).json({status: 0, message: 'Something went wrong', content: {error: err6}});
+//                                                 } else {
+//                                                     const sql = "DELETE FROM payment_plans WHERE quotation_id = $1";
+//                                                     client.query(sql, [req.params.id], (err7, result7) => {
+//                                                         if (err7){
+//                                                             release();
+//                                                             console.log(err7);
+//                                                             res.status(400).json({status: 0, message: 'Something went wrong', content: {error: err7}});
+//                                                         } else {
+//                                                             console.log('PG connect with payment');
+//
+//                                                             let pay = req.body.quotation.payments;
+//                                                             let i;
+//                                                             let array = [];
+//                                                             for (i = 0; i < pay.length; i++) {
+//                                                                 const params = [pay[i].description, pay[i].amount, pay[i].invoice_date, req.params.id];
+//                                                                 array.push(params)
+//                                                             }
+//
+//                                                             let sql = "";
+//                                                             if (array.length === 0){
+//                                                                 sql = "--NODATA";
+//                                                             } else {
+//                                                                 sql = format('INSERT INTO payment_plans (description, amount, invoice_date, quotation_id) VALUES %L RETURNING quotation_id', array);
+//                                                             }
+//                                                             client.query(sql, (err8, result8) => {
+//                                                                 release();
+//                                                                 if (err8){
+//                                                                     console.log(err8);
+//                                                                     res.status(400).json({status: 0, message: 'Something went wrong', content: {error: err8}});
+//                                                                 } else {
+//                                                                     res.status(200).json({status: 1, message: 'Quotations updated successfully'})
+//                                                                 }
+//                                                             })
+//                                                         }
+//                                                     });
+//                                                 }
+//                                             })
+//                                         }
+//                                     });
+//                                 }
+//                             })
+//                         }
+//                     })
+//                 }
+//             });
+//         }
+//     })
+// });
+
 router.post('/update/:id', async (req, res, next) => {
     let now = new Date();
     console.log(req.body);
 
     await pool.connect((err, client, release) => {
-        if (err){
+        if (err) {
             release();
             console.log(err);
             res.status(400).json({status: 0, message: 'Something went wrong', content: {error: err}});
@@ -284,125 +429,148 @@ router.post('/update/:id', async (req, res, next) => {
             ];
 
             client.query(sql, params, (err2, result2) => {
-                if (err2){
+                if (err2) {
                     release();
                     console.log(err2);
                     res.status(400).json({status: 0, message: 'Something went wrong', content: {error: err2}});
                 } else {
-                    const sql = "DELETE FROM financials WHERE quotation_id = $1";
-                    client.query(sql, [req.params.id], (err3, result3) => {
-                        if (err3){
+                    console.log('PG connect with finance');
+
+                    let fin = req.body.quotation.financials;
+                    let financialQuery = "";
+                    for (i = 0; i < fin.length; i++) {
+                        if (fin[i].id === -1) {
+                            financialQuery += "INSERT INTO financials (description, amount, quotation_id) VALUES ('" + fin[i].description + "', " + fin[i].amount + ", " + req.params.id + ")"
+                        } else {
+                            financialQuery += "UPDATE financials SET description='" + fin[i].description + "', amount=" + fin[i].amount + " WHERE financial_id=" + fin[i].id + "";
+                        }
+                        financialQuery += ";"
+                    }
+
+                    if (fin.length === 0) {
+                        financialQuery = "--NODATA";
+                    }
+
+                    client.query(financialQuery, (err3, result3) => {
+                        if (err3) {
                             release();
                             console.log(err3);
                             res.status(400).json({status: 0, message: 'Something went wrong', content: {error: err3}});
                         } else {
-                            console.log('PG connect with finance');
+                            console.log('PG created and updated records on finance');
+                            console.log('PG connect with release plans');
 
-                            const quot_id = req.params.id;
-
-                            let fin = req.body.quotation.financials;
-                            let i;
-                            let array = [];
-                            for (i = 0; i < fin.length; i++) {
-                                const params = [fin[i].description, fin[i].amount, quot_id];
-                                array.push(params)
+                            let rel = req.body.quotation.releases;
+                            let releasesQuery = "";
+                            for (i = 0; i < rel.length; i++) {
+                                if (rel[i].id === -1) {
+                                    releasesQuery += "INSERT INTO release_plans (description, release_date, quotation_id) VALUES ('" + rel[i].description + "', '" + rel[i].release_date + "', " + req.params.id + ")"
+                                } else {
+                                    releasesQuery += "UPDATE release_plans SET description='" + rel[i].description + "', release_date='" + rel[i].release_date + "' WHERE release_id=" + rel[i].id + "";
+                                }
+                                releasesQuery += ";"
                             }
 
-                            let sql = "";
-                            if (array.length === 0){
-                                sql = "--NODATA";
-                            } else {
-                                sql = format('INSERT INTO financials (description, amount, quotation_id) VALUES %L RETURNING quotation_id', array);
+                            if (rel.length === 0) {
+                                releasesQuery = "--NODATA";
                             }
-                            client.query(sql, (err4, result4) => {
-                                if (err4){
+
+                            client.query(releasesQuery, (err4, result4) => {
+                                if (err4) {
                                     release();
                                     console.log(err4);
-                                    res.status(400).json({status: 0, message: 'Something went wrong', content: {error: err4}});
+                                    res.status(400).json({
+                                        status: 0,
+                                        message: 'Something went wrong',
+                                        content: {error: err4}
+                                    });
                                 } else {
-                                    const sql = "DELETE FROM release_plans WHERE quotation_id = $1";
-                                    client.query(sql, [req.params.id], (err5, result5) => {
-                                        if(err5){
+                                    console.log('PG created and updated records on release plan');
+                                    console.log('PG connect with payments');
+
+                                    let pay = req.body.quotation.payments;
+                                    let paymentQuery = "";
+                                    for (i = 0; i < pay.length; i++) {
+                                        if (pay[i].id === -1) {
+                                            paymentQuery += "INSERT INTO payment_plans (description, amount, invoice_date, quotation_id) VALUES ('" + pay[i].description + "', " + pay[i].amount + ", '" + pay[i].invoice_date + "', " + req.params.id + ")"
+                                        } else {
+                                            paymentQuery += "UPDATE payment_plans SET description='" + pay[i].description + "', amount=" + pay[i].amount + ", invoice_date='" + pay[i].invoice_date + "' WHERE payment_id=" + pay[i].id + "";
+                                        }
+                                        paymentQuery += ";"
+                                    }
+
+                                    if (rel.length === 0) {
+                                        paymentQuery = "--NODATA";
+                                    }
+
+                                    client.query(paymentQuery, (err5, result5) => {
+                                        if (err5) {
                                             release();
                                             console.log(err5);
-                                            res.status(400).json({status: 0, message: 'Something went wrong', content: {error: err5}});
+                                            res.status(400).json({
+                                                status: 0,
+                                                message: 'Something went wrong',
+                                                content: {error: err5}
+                                            });
                                         } else {
-                                            console.log('PG connect with releases');
+                                            console.log('PG created and updated records on release plan');
+                                            console.log('PG deleting items');
 
-                                            let rel = req.body.quotation.releases;
-                                            let i;
-                                            let array = [];
-                                            for (i = 0; i < rel.length; i++) {
-                                                const params = [rel[i].description, rel[i].release_date, req.params.id];
-                                                array.push(params);
+                                            let deletedItems = req.body.quotation.deletedItems;
+                                            let deleteQuery = "";
+
+                                            let rels = deletedItems.releases;
+                                            for (i = 0; i < rels.length; i++) {
+                                                deleteQuery += ("DELETE FROM release_plans WHERE release_id=" + rels[i] + ";")
                                             }
 
-                                            let sql = "";
-                                            if (array.length === 0){
-                                                sql = "--NODATA";
-                                            } else {
-                                                sql = format('INSERT INTO release_plans (description, release_date, quotation_id) VALUES %L RETURNING quotation_id', array);
+                                            let fins = deletedItems.financials;
+                                            for (i = 0; i < fins.length; i++) {
+                                                deleteQuery += ("DELETE FROM financials WHERE financial_id=" + fins[i] + ";")
                                             }
-                                            client.query(sql, (err6, result6) => {
-                                                if (err6){
+
+                                            let pays = deletedItems.financials;
+                                            for (i = 0; i < pays.length; i++) {
+                                                deleteQuery += ("DELETE FROM payment_plans WHERE payment_id=" + pays[i] + ";")
+                                            }
+
+                                            client.query(deleteQuery, (err6, result6) => {
+                                                if (err6) {
                                                     release();
                                                     console.log(err6);
-                                                    res.status(400).json({status: 0, message: 'Something went wrong', content: {error: err6}});
-                                                } else {
-                                                    const sql = "DELETE FROM payment_plans WHERE quotation_id = $1";
-                                                    client.query(sql, [req.params.id], (err7, result7) => {
-                                                        if (err7){
-                                                            release();
-                                                            console.log(err7);
-                                                            res.status(400).json({status: 0, message: 'Something went wrong', content: {error: err7}});
-                                                        } else {
-                                                            console.log('PG connect with payment');
-
-                                                            let pay = req.body.quotation.payments;
-                                                            let i;
-                                                            let array = [];
-                                                            for (i = 0; i < pay.length; i++) {
-                                                                const params = [pay[i].description, pay[i].amount, pay[i].invoice_date, req.params.id];
-                                                                array.push(params)
-                                                            }
-
-                                                            let sql = "";
-                                                            if (array.length === 0){
-                                                                sql = "--NODATA";
-                                                            } else {
-                                                                sql = format('INSERT INTO payment_plans (description, amount, invoice_date, quotation_id) VALUES %L RETURNING quotation_id', array);
-                                                            }
-                                                            client.query(sql, (err8, result8) => {
-                                                                release();
-                                                                if (err8){
-                                                                    console.log(err8);
-                                                                    res.status(400).json({status: 0, message: 'Something went wrong', content: {error: err8}});
-                                                                } else {
-                                                                    res.status(200).json({status: 1, message: 'Quotations updated successfully'})
-                                                                }
-                                                            })
-                                                        }
+                                                    res.status(400).json({
+                                                        status: 0,
+                                                        message: 'Something went wrong',
+                                                        content: {error: err6}
                                                     });
+                                                } else {
+                                                    release();
+                                                    res.status(200).json({
+                                                        status: 1,
+                                                        message: 'Quotations updated successfully'
+                                                    })
                                                 }
-                                            })
+                                            });
                                         }
-                                    });
+                                    })
                                 }
                             })
                         }
                     })
+
                 }
             });
         }
     })
 });
 
+
 /* UPDATE status*/
 router.post('/update/:id/status', async (req, res, next) => {
 
     let now = new Date();
     await pool.connect((err, client, release) => {
-        if (err){
+        if (err) {
             release();
             console.log(err);
             res.status(400).json({status: 0, message: 'Something went wrong', content: {error: err}});
@@ -420,7 +588,7 @@ router.post('/update/:id/status', async (req, res, next) => {
 
             client.query(sql, params, (err2, result2) => {
                 release();
-                if(err2){
+                if (err2) {
                     console.log(err2);
                     res.status(400).json({status: 0, message: 'Something went wrong', content: {error: err2}});
                 } else {
