@@ -116,7 +116,13 @@ router.post('/new', async (req, res, next) => {
                     array.push(params);
                 }
 
-                const sql = format('INSERT INTO financials (description, amount, quotation_id) VALUES %L RETURNING quotation_id', array);
+                let sql = "";
+                if (array.length === 0){
+                    sql = "--NODATA";
+                } else {
+                    sql = format('INSERT INTO financials (description, amount, quotation_id) VALUES %L RETURNING quotation_id', array);
+                }
+
                 client.query(sql, (err2, result2) => {
                     if (err2) {
                         release();
@@ -133,7 +139,13 @@ router.post('/new', async (req, res, next) => {
                             array.push(params);
                         }
 
-                        const sql = format('INSERT INTO release_plans (description, release_date, quotation_id) VALUES %L RETURNING quotation_id', array);
+                        let sql = "";
+                        if (array.length === 0){
+                            sql = "--NODATA";
+                        } else {
+                            sql = format('INSERT INTO release_plans (description, release_date, quotation_id) VALUES %L RETURNING quotation_id', array);
+                        }
+
                         client.query(sql, (err3, result3) => {
                             if (err3) {
                                 console.log(err3);
@@ -154,7 +166,13 @@ router.post('/new', async (req, res, next) => {
                                     array.push(params);
                                 }
 
-                                const sql = format('INSERT INTO payment_plans (description, amount, invoice_date, quotation_id) VALUES %L RETURNING quotation_id', array);
+                                let sql = "";
+                                if (array.length === 0){
+                                    sql = "--NODATA";
+                                } else {
+                                    sql = format('INSERT INTO payment_plans (description, amount, invoice_date, quotation_id) VALUES %L RETURNING quotation_id', array);
+                                }
+
                                 client.query(sql, (err4, result4) => {
                                     release();
                                     if (err4) {
