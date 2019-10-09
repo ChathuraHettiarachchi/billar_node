@@ -4,13 +4,15 @@
     <list default="true" id="a6419de4-2769-4d20-a118-f7f01701e031" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/5/1/5136d17b4e56fe1c7e09b0ae87169b6e587165bf" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/5/1/5136d17b4e56fe1c7e09b0ae87169b6e587165bf" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/quotations.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/quotations.js" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FavoritesManager">
+    <favorites_list name="billar_node" />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -21,10 +23,6 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
-  </component>
-  <component name="ProjectFrameBounds" fullScreen="true">
-    <option name="width" value="1440" />
-    <option name="height" value="900" />
   </component>
   <component name="ProjectId" id="1Re4PXGJfJQFnXGX6fMjiwy2UTh" />
   <component name="ProjectLevelVcsManager">
@@ -112,7 +110,9 @@
       <workItem from="1570081196076" duration="33000" />
       <workItem from="1570081444506" duration="129000" />
       <workItem from="1570081901912" duration="5000" />
-      <workItem from="1570418884777" duration="2308000" />
+      <workItem from="1570418884777" duration="11557000" />
+      <workItem from="1570502653808" duration="3555000" />
+      <workItem from="1570595509894" duration="1709000" />
     </task>
     <servers />
   </component>

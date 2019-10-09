@@ -121,10 +121,10 @@ router.delete('/remove/:id', async (req, res, next) => {
             console.log(err);
             res.status(400).json({status: 0, message: 'Something went wrong', content: {error: err}});
         } else {
-            const sql = "DELETE FROM clients WHERE client_id = $1";
-            const params = [req.params.id];
+            const deleteQuots = "DELETE FROM quotations WHERE client_id="+req.params.id+";";
+            const deleteClient = "DELETE FROM clients WHERE client_id="+req.params.id+";";
 
-            client.query(sql, params, (err2, result2) => {
+            client.query((deleteQuots + deleteClient), (err2, result2) => {
                 if(err2){
                     console.log(err2);
                     res.status(400).json({status: 0, message: 'Something went wrong', content: {error: err2}});
