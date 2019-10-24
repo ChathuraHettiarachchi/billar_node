@@ -86,7 +86,7 @@ router.post('/new', async (req, res, next) => {
             console.log('PG connect with client');
             console.log(req.body);
 
-            const sql = "INSERT INTO clients (name, code, email, contact_number, address_line_first, address_line_last, country, description) VALUES ($1,$2,$3,$4,$5,$6,$7,$8)";
+            const sql = "INSERT INTO clients (name, code, email, contact_number, address_line_first, address_line_last, country, description, street, state, city, zipcode) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)";
             const params = [
                 req.body.client.name,
                 req.body.client.code,
@@ -95,7 +95,11 @@ router.post('/new', async (req, res, next) => {
                 req.body.client.address_line_first,
                 req.body.client.address_line_last,
                 req.body.client.country,
-                req.body.client.description
+                req.body.client.description,
+                req.body.client.street,
+                req.body.client.state,
+                req.body.client.city,
+                req.body.client.zipcode
             ];
 
             client.query(sql, params, (err2, result2) => {
@@ -150,7 +154,7 @@ router.post('/update/:id', async (req, res, next) => {
             console.log('PG connect with client');
             console.log(req.body);
 
-            const sql = "UPDATE clients SET name = $1, code = $2, email = $3, contact_number = $4, address_line_first = $5, address_line_last = $6, country = $7, description = $8 WHERE client_id = $9";
+            const sql = "UPDATE clients SET name = $1, code = $2, email = $3, contact_number = $4, address_line_first = $5, address_line_last = $6, country = $7, description = $8, state = $10, street = $11, city = $12, zipcode = $13 WHERE client_id = $9";
             const params = [
                 req.body.client.name,
                 req.body.client.code,
@@ -160,7 +164,11 @@ router.post('/update/:id', async (req, res, next) => {
                 req.body.client.address_line_last,
                 req.body.client.country,
                 req.body.client.description,
-                req.params.id
+                req.params.id,
+                req.body.client.street,
+                req.body.client.state,
+                req.body.client.city,
+                req.body.client.zipcode
             ];
 
             client.query(sql, params, (err2, result2) => {
