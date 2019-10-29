@@ -10,7 +10,7 @@ router.get('/', async (req, res, next) => {
             console.log(err);
             res.status(400).json({status: 0, message: 'Something went wrong', content: {error: err}});
         } else {
-            const sql = "SELECT * FROM payment_plans ORDER BY payment_id";
+            const sql = "SELECT * FROM payment_plans INNER JOIN quotations ON payment_plans.quotation_id=quotations.quotation_id ORDER BY payment_id";
             client.query(sql, (err2, result2) => {
                 release();
                 if(err2){
