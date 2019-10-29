@@ -2,13 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a6419de4-2769-4d20-a118-f7f01701e031" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/5/1/5136d17b4e56fe1c7e09b0ae87169b6e587165bf" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/5/1/5136d17b4e56fe1c7e09b0ae87169b6e587165bf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/index.pb" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/index.pb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/app.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/www" beforeDir="false" afterPath="$PROJECT_DIR$/bin/www" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/routes/payments.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/payments.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/quotations.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/quotations.js" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -145,7 +140,7 @@
       <workItem from="1571980173316" duration="717000" />
       <workItem from="1571981054354" duration="3468000" />
       <workItem from="1572323884051" duration="1647000" />
-      <workItem from="1572326736429" duration="1453000" />
+      <workItem from="1572326736429" duration="2921000" />
     </task>
     <servers />
   </component>
