@@ -430,7 +430,7 @@ router.post('/update/:id', async (req, res, next) => {
                                                 deleteQuery += ("DELETE FROM financials WHERE financial_id=" + fins[i] + ";")
                                             }
 
-                                            let pays = deletedItems.financials;
+                                            let pays = deletedItems.payments;
                                             for (i = 0; i < pays.length; i++) {
                                                 deleteQuery += ("DELETE FROM payment_plans WHERE payment_id=" + pays[i] + ";")
                                             }

@@ -3,7 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="a6419de4-2769-4d20-a118-f7f01701e031" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/payments.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/payments.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/quotations.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/quotations.js" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -140,7 +140,7 @@
       <workItem from="1571980173316" duration="717000" />
       <workItem from="1571981054354" duration="3468000" />
       <workItem from="1572323884051" duration="1647000" />
-      <workItem from="1572326736429" duration="2921000" />
+      <workItem from="1572326736429" duration="4638000" />
     </task>
     <servers />
   </component>
@@ -162,6 +162,14 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/routes/quotations.js</url>
+          <line>321</line>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="7" />
+        </line-breakpoint>
+      </breakpoints>
       <default-breakpoints>
         <breakpoint type="dart-exception" />
       </default-breakpoints>
