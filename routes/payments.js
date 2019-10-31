@@ -10,7 +10,7 @@ router.get('/', async (req, res, next) => {
             console.log(err);
             res.status(400).json({status: 0, message: 'Something went wrong', content: {error: err}});
         } else {
-            const sql = "SELECT * FROM payment_plans ORDER BY payment_id";
+            const sql = "SELECT * FROM payment_plans INNER JOIN quotations ON payment_plans.quotation_id=quotations.quotation_id ORDER BY payment_id";
             client.query(sql, (err2, result2) => {
                 release();
                 if(err2){
@@ -115,7 +115,7 @@ router.get('/all', async (req, res, next) => {
             console.log(err);
             res.status(400).json({status: 0, message: 'Something went wrong', content: {error: err}});
         } else {
-            const sql = "SELECT p.payment_id, p.invoice_date, p.amount, p.sent_to_client, q.quotation_id, q.created_at AS quotation_created_at,q.title AS quotation_title, cs.name AS client_name, cs.code as client_code FROM payment_plans p INNER JOIN quotations q ON q.quotation_id=p.quotation_id INNER JOIN clients cs ON cs.client_id=q.client_id";
+            const sql = "SELECT p.payment_id, p.invoice_date, p.amount, p.sent_to_client, q.quotation_id, q.created_at AS quotation_created_at,q.title AS quotation_title, cs.name AS client_name, cs.code as client_code, q.quotation_number AS quotation_number FROM payment_plans p INNER JOIN quotations q ON q.quotation_id=p.quotation_id INNER JOIN clients cs ON cs.client_id=q.client_id";
             client.query(sql, (err2, result2) => {
                 release();
                 if (err2){
